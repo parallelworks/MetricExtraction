@@ -1,5 +1,5 @@
 from paraview.simple import *
-
+import sys
 
 def read_csv(f):
     kpihash = {}
@@ -13,10 +13,28 @@ def read_csv(f):
     return kpihash
 
 
-def getcellarraysfromkpihash(kpihash):
+def scalar_field(fieldname, delimiter='_'):
+    if len(fieldname.split(delimiter)) == 1:
+        return True
+    elif len(fieldname.split(delimiter)) == 2:
+        return False
+    else:
+        print("Check the format of the field name '" + fieldname + "'")
+        sys.exit(1)
+
+
+def splitfieldComponent(fieldname,delimiter='_'):
+    if scalar_field(fieldname, delimiter):
+        return fieldname,''
+    else:
+        return fieldname.split(delimiter)[0], fieldname.split(delimiter)[1]
+
+
+def getfieldsfromkpihash(kpihash):
     cellsarrays = []
     for kpi in kpihash:
-        cellsarrays.append(kpihash[kpi]['field'])
+        kpifield = kpihash[kpi]['field']
+        cellsarrays.append(kpifield.split('_')[0])
 
     ca = set(cellsarrays)
 
@@ -24,17 +42,48 @@ def getcellarraysfromkpihash(kpihash):
     return cellsarrays
 
 
+def getfldComponentMap(arrayInfo):
+    compName2num = {}
+    numComps = arrayInfo.GetNumberOfComponents()
+    if numComps>1:
+        for iComp in range(-1,numComps):
+            compName2num[arrayInfo.GetComponentName(iComp)] = iComp
+    return compName2num
+
+
+def getfldCompNumber(arrayInfo, kpifld_Comp):
+    kpiComp = splitfieldComponent(kpifld_Comp)[1]
+    compNumberMap = getfldComponentMap(arrayInfo)
+    if not kpiComp:
+        compNum = 0
+    else:
+        compNum = compNumberMap[kpiComp]
+    return compNum
+
+
+def getdatarange(datasource, kpifld_Comp):
+    kpifld = splitfieldComponent(kpifld_Comp)[0]
+    arrayInfo = datasource.PointData[kpifld]
+    compNumber = getfldCompNumber(arrayInfo, kpifld_Comp)
+    datarange = arrayInfo.GetRange(compNumber)
+    return datarange
+
+
 def colorMetric(d, kpi, kpihash):
     display = GetDisplayProperties(d)
-    ColorBy(display, ('POINTS', kpihash[kpi]['field']))
+
+    kpifld, kpifldcomp = splitfieldComponent(kpihash[kpi]['field'])
+
+    ColorBy(display, ('POINTS', kpifld, kpifldcomp))
     Render()
     UpdateScalarBars()
-    ctf = GetColorTransferFunction(kpihash[kpi]['field'])
+    ctf = GetColorTransferFunction(kpifld)
     ctf.ApplyPreset(kpihash[kpi]["colorscale"], True)
     if kpihash[kpi]["invertcolor"] == "1":
         ctf.InvertTransferFunction()
-    #datarange = d.GetPointDataInformation().GetArray(kpihash[kpi]['field']).GetComponentRange(0)
-    datarange = d.PointData[kpihash[kpi]['field']].GetRange()
+
+    datarange = getdatarange(d, kpihash[kpi]['field'])
+
     min = datarange[0]
     max = datarange[1]
     if kpihash[kpi]["min"] != "auto" and kpihash[kpi]["min"] != "":
@@ -239,20 +288,25 @@ def createLine(kpi, kpihash, data_reader):
     
     # get the line data
     pl = servermanager.Fetch(l)
+    kpifld_comp = kpihash[kpi]['field']
+    kpifld = splitfieldComponent(kpifld_comp)[0]
     if (image == "plot"):
         f=open("plot_"+kpi+".csv","w")
-        f.write(",".join(["point",kpihash[kpi]['field']])+"\n")
+        f.write(",".join(["point", kpifld_comp])+"\n")
     METRIC_INDEX=0
     for a in range(0,pl.GetPointData().GetNumberOfArrays()):
-        if kpihash[kpi]['field'] == pl.GetPointData().GetArrayName(a):
+        if kpifld == pl.GetPointData().GetArrayName(a):
             METRIC_INDEX = a
     sum=0
     num=pl.GetPointData().GetArray(METRIC_INDEX).GetNumberOfTuples()
+    # Get the component numbers from the input of line filter (data_reader) (?)
+    compNumber = getfldCompNumber(data_reader.PointData[kpifld], kpifld_comp)
     for t in range(0,num):
-        if str(float(pl.GetPointData().GetArray(METRIC_INDEX).GetTuple(t)[0])).lower() != "nan":
-            sum+=pl.GetPointData().GetArray(METRIC_INDEX).GetTuple(t)[0]
+        dataPoint = pl.GetPointData().GetArray(METRIC_INDEX).GetTuple(t)[compNumber]
+        if str(float(dataPoint)).lower() != "nan":
+            sum += dataPoint
         if (image == "plot"):
-            f.write(",".join([str(t),str(pl.GetPointData().GetArray(METRIC_INDEX).GetTuple(t)[0])])+"\n")
+            f.write(",".join([str(t), str(dataPoint)])+"\n")
     if (image == "plot"):
         f.close()
     ave=sum/pl.GetPointData().GetArray(METRIC_INDEX).GetNumberOfTuples()

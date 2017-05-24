@@ -1,0 +1,9 @@
+/.project
+/*.png
+/*.pyc
+/*~
+/plot_lineNT.csv
+/plot_lineS.csv
+/pythonShellScratch
+/test.py
+/testPV.py

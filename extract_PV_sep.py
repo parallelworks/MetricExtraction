@@ -14,7 +14,7 @@ fp_csvin = data_IO.open_file(kpiFileAddress)
 kpihash = pvutils.read_csv(fp_csvin)
 fp_csvin.close()
 
-cellsarrays = pvutils.getcellarraysfromkpihash(kpihash)
+cellsarrays = pvutils.getfieldsfromkpihash(kpihash)
 
 print kpihash
 print cellsarrays
@@ -34,6 +34,7 @@ animationScene1.UpdateAnimationUsingDataTimeSteps()
 
 # only load the data that is needed
 casefoam.PointVariables = cellsarrays
+
 casefoam.ElementBlocks = ['PNT', 'C3D20 C3D20R', 'COMPOSITE LAYER C3D20', 'Beam B32 B32R', 'CPS8 CPE8 CAX8 S8 S8R', 'C3D8 C3D8R', 'TRUSS2', 'TRUSS2', 'CPS4R CPE4R S4 S4R', 'CPS4I CPE4I', 'C3D10', 'C3D4', 'C3D15', 'CPS6 CPE6 S6', 'C3D6', 'CPS3 CPE3 S3', '2-node 1d network entry elem', '2-node 1d network exit elem', '2-node 1d genuine network elem']
 
 latesttime = animationScene1.TimeKeeper.TimestepValues[-1]
@@ -84,8 +85,8 @@ fp_csv_metrics.write(",".join(['metric','ave','min','max'])+"\n")
 renderView1.InteractionMode = '2D'
 for kpi in kpihash:
     kpitype = kpihash[kpi]['type'].split("_")[0]
-    kpifield = kpihash[kpi]['field']
-    print kpi, type(kpi), kpitype, kpifield
+    kpifield_comp = kpihash[kpi]['field']
+    print kpi, type(kpi), kpitype, kpifield_comp
     try:
         kpiimage = kpihash[kpi]['image'].split("_")[0]
     except:
@@ -106,7 +107,9 @@ for kpi in kpihash:
         d,ave = pvutils.createLine(kpi, kpihash, casefoam)
     elif kpitype== "Volume":
         d = pvutils.createVolume(kpi, kpihash, casefoam)
-    datarange=d.PointData[kpifield].GetRange()
+
+    datarange = pvutils.getdatarange(d, kpifield_comp)
+
     if kpitype == "Probe":
         average=(datarange[0]+datarange[1])/2
     elif kpitype == "Line":
@@ -114,10 +117,12 @@ for kpi in kpihash:
     elif kpitype == "Slice":
         # get kpi field value and area - average = value/area
         integrateVariables = IntegrateVariables(Input=d)
-        average=integrateVariables.PointData[kpifield].GetRange()[0]/integrateVariables.CellData['Area'].GetRange()[0]
+        average= pvutils.getdatarange(integrateVariables, kpifield_comp)[0]\
+                 / integrateVariables.CellData['Area'].GetRange()[0]
     elif kpitype == "Volume" or kpitype == "Clip":
         integrateVariables = IntegrateVariables(Input=d)
-        average=integrateVariables.PointData[kpifield].GetRange()[0]/integrateVariables.CellData['Volume'].GetRange()[0]
+        average= pvutils.getdatarange(integrateVariables, kpifield_comp)[0]\
+                 / integrateVariables.CellData['Volume'].GetRange()[0]
 
     fp_csv_metrics.write(",".join([kpi,str(average),str(datarange[0]),str(datarange[1])])+"\n")
 
