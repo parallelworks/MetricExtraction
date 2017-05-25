@@ -247,7 +247,7 @@ def createVolume(kpi, kpihash, data_reader):
     return c
 
 
-def createLine(kpi, kpihash, data_reader):
+def createLine(kpi, kpihash, data_reader, outputDir="."):
     resolution = int(kpihash[kpi]['type'].split("_")[1])
     try:
         image = kpihash[kpi]['image']
@@ -291,7 +291,7 @@ def createLine(kpi, kpihash, data_reader):
     kpifld_comp = kpihash[kpi]['field']
     kpifld = splitfieldComponent(kpifld_comp)[0]
     if (image == "plot"):
-        f=open("plot_"+kpi+".csv","w")
+        f=open(outputDir+"/plot_"+kpi+".csv","w")
         f.write(",".join(["point", kpifld_comp])+"\n")
     METRIC_INDEX=0
     for a in range(0,pl.GetPointData().GetNumberOfArrays()):
@@ -305,9 +305,9 @@ def createLine(kpi, kpihash, data_reader):
         dataPoint = pl.GetPointData().GetArray(METRIC_INDEX).GetTuple(t)[compNumber]
         if str(float(dataPoint)).lower() != "nan":
             sum += dataPoint
-        if (image == "plot"):
+        if image == "plot":
             f.write(",".join([str(t), str(dataPoint)])+"\n")
-    if (image == "plot"):
+    if image == "plot":
         f.close()
     ave=sum/pl.GetPointData().GetArray(METRIC_INDEX).GetNumberOfTuples()
     return l, ave
