@@ -1,5 +1,6 @@
 from paraview.simple import *
 import sys
+import os
 import pvutils
 import data_IO
 
@@ -89,6 +90,10 @@ camera=GetActiveCamera()
 
 
 print("Generating KPIs")
+
+# Make outputDir if it doesn't exist already
+if not(os.path.exists(outputDir)):
+    os.makedirs(outputDir)
 
 fp_csv_metrics = data_IO.open_file(outputDir + "/" + metricFileName, "w")
 fp_csv_metrics.write(",".join(['metric','ave','min','max'])+"\n")
