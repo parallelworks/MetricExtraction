@@ -7,7 +7,7 @@ The below describes a csv file syntax created to extract field information from 
 *Define the below parameters for each desired metric to extract:*
 
 * **name**: unique metric name
-* **field**: domain field to extract metrics from (must be available in the model). For vector/tensor quantities specify the desired component as field_componentName, or field_Magnitude.
+* **field or field_component**: domain field to extract metrics from (must be available in the model). For vector/tensor quantities specify the desired component as field_componentName, or field_Magnitude.
 * **type**: see metric extract types below
 * **position**: see below type definition for position description
 
