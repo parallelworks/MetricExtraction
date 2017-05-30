@@ -1,0 +1,32 @@
+{
+    "clipHFLZ": {
+        "opacity": "0.7", 
+        "invertcolor": "0", 
+        "min": "-1200", 
+        "max": "1700", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "HFL", 
+        "fieldComponent": "Z", 
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "center center -0.1", 
+        "type": "Clip",
+		"plane": "Y",
+		"invert": "true"
+    }, 
+    "clipNT": {
+        "opacity": "0.7", 
+        "invertcolor": "0", 
+        "min": "25", 
+        "max": "93", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "NT", 
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "center center -0.1", 
+        "type": "Clip",
+		"plane": "Y"		
+    }
+}

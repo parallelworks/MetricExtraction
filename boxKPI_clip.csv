@@ -1,0 +1,2 @@
+name,field,type,position,image,min,max,colorscale,invertcolor,discretecolors,opacity,bodyopacity
+clipHFLZ,HFL_Z,Clip_Y,center center -0.1,iso,-1200,1700,Blue to Red Rainbow,0,20,0.7,0.3

@@ -8,4 +8,7 @@
 /test.py
 /testPV.py
 /testOut/
-/testOut2/
+/testOut?/
+/testPandoc/
+/testOutJson/
+/testKPIreaderJSON/

@@ -1,0 +1,44 @@
+{
+    "clipHFLX": {
+        "opacity": "0.7", 
+        "invertcolor": "0", 
+        "min": "-1200", 
+        "max": "1700", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "HFL_X", 
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "center center -0.1", 
+        "type": "Clip_Y"
+    }, 
+    "probeU": {
+        "field": "U_Y", 
+        "type": "Probe", 
+        "position": "0.0 -5.0 0.0 "
+    }, 
+    "volHFLX": {
+        "field": "HFL_X", 
+        "type": "Volume", 
+        "position": "-2 3 -3 -.5 -.1 4"
+    }, 
+    "lineNT": {
+        "field": "NT", 
+        "image": "plot", 
+        "type": "Line_20", 
+        "position": "0.0 -5.0 0.0 0.0 5.0 0.0"
+    }, 
+    "sliceNT": {
+        "opacity": "0.7", 
+        "invertcolor": "0", 
+        "min": "25", 
+        "max": "93", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "NT", 
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "center center -0.1", 
+        "type": "Slice_Z"
+    }
+}

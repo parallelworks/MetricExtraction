@@ -1,4 +1,13 @@
 import sys
+import os
+
+
+def xstr(s):
+    return '' if s is None else str(s)
+
+
+def str2bool(v):
+    return v.lower() in ("yes", "true", "t", "1")
 
 
 def read_ints_from_file_pointer(file_pointer, flag_str, num_data):
@@ -56,6 +65,10 @@ def read_int_from_file_pointer(file_pointer, flag_str):
 
 
 def open_file(file_name, open_mode="r"):
+    if open_mode == "w":
+        if not os.path.exists(os.path.dirname(file_name)):
+            os.makedirs(os.path.dirname(file_name))
+
     try:
         file_pointer = open(file_name, open_mode)
         return file_pointer

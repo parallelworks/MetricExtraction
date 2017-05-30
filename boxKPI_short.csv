@@ -1,0 +1,6 @@
+name,field,type,position,image,min,max,colorscale,invertcolor,discretecolors,opacity,bodyopacity
+lineNT,NT,Line_20,0.0 -5.0 0.0 0.0 5.0 0.0,plot
+sliceNT,NT,Slice_Z,center center -0.1,iso,25,93,Blue to Red Rainbow,0,20,0.7,0.3
+clipHFLX,HFL_X,Clip_Y,center center -0.1,iso,-1200,1700,Blue to Red Rainbow,0,20,0.7,0.3
+probeU,U_Y,Probe,0.0 -5.0 0.0 
+volHFLX,HFL_X,Volume,-2 3 -3 -.5 -.1 4

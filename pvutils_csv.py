@@ -1,35 +1,5 @@
 from paraview.simple import *
 import sys
-import data_IO
-
-def byteify(input):
-    """
-    Got this function from https://stackoverflow.com/questions/2357230/what-is-the-proper-way-to-comment-functions-in-python
-    "This short and simple recursive function will convert any decoded JSON object from using unicode strings to 
-    UTF-8-encoded byte strings"
-    This is not the most efficient solution. See the code provided by Mirec Miskuf to see how to use an object_hook to 
-    do this more efficiently.
-    """
-    if isinstance(input, dict):
-        return {byteify(key): byteify(value)
-                for key, value in input.iteritems()}
-    elif isinstance(input, list):
-        return [byteify(element) for element in input]
-    elif isinstance(input, unicode):
-        return input.encode('utf-8')
-    else:
-        return input
-
-
-def planeNormalFromName(planeName):
-    if planeName == "X" or planeName == "x":
-        normal = [1.0, 0.0, 0.0]
-    if planeName == "Y" or planeName == "y":
-        normal = [0.0, 1.0, 0.0]
-    if planeName == "Z" or planeName == "z":
-        normal = [0.0, 0.0, 1.0]
-    return normal
-
 
 def read_csv(f):
     kpihash = {}
@@ -43,23 +13,33 @@ def read_csv(f):
     return kpihash
 
 
+def scalar_field(fieldname, delimiter='_'):
+    if len(fieldname.split(delimiter)) == 1:
+        return True
+    elif len(fieldname.split(delimiter)) == 2:
+        return False
+    else:
+        print("Check the format of the field name '" + fieldname + "'")
+        sys.exit(1)
+
+
+def splitfieldComponent(fieldname,delimiter='_'):
+    if scalar_field(fieldname, delimiter):
+        return fieldname,''
+    else:
+        return fieldname.split(delimiter)[0], fieldname.split(delimiter)[1]
+
+
 def getfieldsfromkpihash(kpihash):
     cellsarrays = []
     for kpi in kpihash:
-        cellsarrays.append(kpihash[kpi]['field'])
+        kpifield = kpihash[kpi]['field']
+        cellsarrays.append(kpifield.split('_')[0])
 
     ca = set(cellsarrays)
 
     cellsarrays = list(ca)
     return cellsarrays
-
-
-def isfldScalar(arrayInfo):
-    numComps = arrayInfo.GetNumberOfComponents()
-    if numComps == 1:
-        return True
-    else:
-        return False
 
 
 def getfldComponentMap(arrayInfo):
@@ -71,7 +51,8 @@ def getfldComponentMap(arrayInfo):
     return compName2num
 
 
-def getfldCompNumber(arrayInfo, kpiComp):
+def getfldCompNumber(arrayInfo, kpifld_Comp):
+    kpiComp = splitfieldComponent(kpifld_Comp)[1]
     compNumberMap = getfldComponentMap(arrayInfo)
     if not kpiComp:
         compNum = 0
@@ -80,33 +61,18 @@ def getfldCompNumber(arrayInfo, kpiComp):
     return compNum
 
 
-def getdatarange(datasource, kpifld, kpifldcomp):
+def getdatarange(datasource, kpifld_Comp):
+    kpifld = splitfieldComponent(kpifld_Comp)[0]
     arrayInfo = datasource.PointData[kpifld]
-    compNumber = getfldCompNumber(arrayInfo, kpifldcomp)
+    compNumber = getfldCompNumber(arrayInfo, kpifld_Comp)
     datarange = arrayInfo.GetRange(compNumber)
     return datarange
-
-
-def correctfieldcomponent(datasource, kpihash):
-    """
-    Set "fieldComponent" to "Magnitude" if the component of vector/tensor fields is not given. For scalar fields set 
-    "fieldComponent" to an empty string.
-    """
-    kpifld = kpihash['field']
-    arrayInfo = datasource.PointData[kpifld]
-    if isfldScalar(arrayInfo):
-        kpihash['fieldComponent'] = ''
-    else:
-        if not 'fieldComponent' in kpihash:
-            kpihash['fieldComponent'] = 'Magnitude'
-    return kpihash
 
 
 def colorMetric(d, kpi, kpihash):
     display = GetDisplayProperties(d)
 
-    kpifld = kpihash[kpi]['field']
-    kpifldcomp = kpihash[kpi]['fieldComponent']
+    kpifld, kpifldcomp = splitfieldComponent(kpihash[kpi]['field'])
 
     ColorBy(display, ('POINTS', kpifld, kpifldcomp))
     Render()
@@ -115,7 +81,7 @@ def colorMetric(d, kpi, kpihash):
     ctf.ApplyPreset(kpihash[kpi]["colorscale"], True)
     if kpihash[kpi]["invertcolor"] == "1":
         ctf.InvertTransferFunction()
-    datarange = getdatarange(d, kpifld, kpifldcomp)
+    datarange = getdatarange(d, kpihash[kpi]['field'])
 
     min = datarange[0]
     max = datarange[1]
@@ -156,8 +122,8 @@ def createSlice(kpi, kpihash, dataReader, dataDisplay, isIndivImgs):
     if isIndivImgs:
         dataDisplay.Opacity = bodyopacity
     slicetype = "Plane"
-    plane = kpihash[kpi]['plane']
-    origin = kpihash[kpi]['position'].split(" ")
+    plane=kpihash[kpi]['type'].split("_")[1]
+    origin=kpihash[kpi]['position'].split(" ")
     s = Slice(Input=dataReader)
     s.SliceType = slicetype
     s.SliceType.Origin = camera.GetFocalPoint()
@@ -167,7 +133,13 @@ def createSlice(kpi, kpihash, dataReader, dataDisplay, isIndivImgs):
         s.SliceType.Origin[1] = float(origin[1])
     if origin[2] != "center":
         s.SliceType.Origin[2] = float(origin[2])
-    s.SliceType.Normal = planeNormalFromName(plane)
+    if (plane == "X" or plane == "x"):
+        normal = [1.0, 0.0, 0.0]
+    if (plane == "Y" or plane == "y"):
+        normal = [0.0, 1.0, 0.0]
+    if (plane == "Z" or plane == "z"):
+        normal = [0.0, 0.0, 1.0]
+    s.SliceType.Normal = normal
     sDisplay = Show(s, renderView1)
     sDisplay.ColorArrayName = [None, '']
     sDisplay.SetRepresentationType('Surface')
@@ -187,12 +159,12 @@ def createClip(kpi, kpihash, data_reader, data_display, isIndivImages):
     if isIndivImages == True:
         data_display.Opacity = bodyopacity
     cliptype = "Plane"
-    plane = kpihash[kpi]['plane']  #kpihash[kpi]['type'].split("_")[1]
-    if 'invert' in kpihash[kpi].keys():
-        invert = data_IO.str2bool(kpihash[kpi]['invert'])
-    else:
+    plane = kpihash[kpi]['type'].split("_")[1]
+    try:
+        if kpihash[kpi]['type'].split("_")[2] == "Invert":
+            invert = 1
+    except:
         invert = 0
-
     origin=kpihash[kpi]['position'].split(" ")
     s = Clip(Input=data_reader)
     s.ClipType = cliptype
@@ -204,7 +176,13 @@ def createClip(kpi, kpihash, data_reader, data_display, isIndivImages):
         s.ClipType.Origin[1] = float(origin[1])
     if origin[2] != "center":
         s.ClipType.Origin[2] = float(origin[2])
-    s.ClipType.Normal = planeNormalFromName(plane)
+    if plane == "X" or plane == "x":
+        normal = [1.0, 0.0, 0.0]
+    if plane == "Y" or plane == "y":
+        normal = [0.0, 1.0, 0.0]
+    if plane == "Z" or plane == "z":
+        normal = [0.0, 0.0, 1.0]
+    s.ClipType.Normal = normal
     sDisplay = Show(s, renderView1)
     sDisplay.ColorArrayName = [None, '']
     sDisplay.SetRepresentationType('Surface')
@@ -269,7 +247,7 @@ def createVolume(kpi, kpihash, data_reader):
 
 
 def createLine(kpi, kpihash, data_reader, outputDir="."):
-    resolution = int(kpihash[kpi]['resolution'])
+    resolution = int(kpihash[kpi]['type'].split("_")[1])
     try:
         image = kpihash[kpi]['image']
     except:
@@ -309,12 +287,11 @@ def createLine(kpi, kpihash, data_reader, outputDir="."):
     
     # get the line data
     pl = servermanager.Fetch(l)
-
-    kpifld = kpihash[kpi]['field']
-    kpiComp = kpihash[kpi]['fieldComponent']
+    kpifld_comp = kpihash[kpi]['field']
+    kpifld = splitfieldComponent(kpifld_comp)[0]
     if (image == "plot"):
         f=open(outputDir+"/plot_"+kpi+".csv","w")
-        f.write(",".join(["point", kpifld + "_" + kpiComp])+"\n")
+        f.write(",".join(["point", kpifld_comp])+"\n")
     METRIC_INDEX=0
     for a in range(0,pl.GetPointData().GetNumberOfArrays()):
         if kpifld == pl.GetPointData().GetArrayName(a):
@@ -322,7 +299,7 @@ def createLine(kpi, kpihash, data_reader, outputDir="."):
     sum=0
     num=pl.GetPointData().GetArray(METRIC_INDEX).GetNumberOfTuples()
     # Get the component numbers from the input of line filter (data_reader) (?)
-    compNumber = getfldCompNumber(data_reader.PointData[kpifld], kpiComp)
+    compNumber = getfldCompNumber(data_reader.PointData[kpifld], kpifld_comp)
     for t in range(0,num):
         dataPoint = pl.GetPointData().GetArray(METRIC_INDEX).GetTuple(t)[compNumber]
         if str(float(dataPoint)).lower() != "nan":

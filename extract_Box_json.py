@@ -1,19 +1,14 @@
 from paraview.simple import *
+import json
 import sys
-import os
-import pvutils_csv as pvutils
+import pvutils
 import data_IO
 
 if len(sys.argv) < 5:
     print("Number of provided arguments: ", len(sys.argv) - 1)
-    print("Usage: pvpython extractBox.py  <solve.exo>  <desiredMetrics.csv> <outputDir> <outputMetrics.csv>")
+    print("Usage: pvpython extractBox_json.py  <solve.exo>  <desiredMetrics.json> <outputDir> <outputMetrics.csv>")
     sys.exit()
 
-
-# solveexoFileAddress = \
-#     '/home/marmar/Dropbox/parallelWorks/weldingProject/paraviewPostProcess/outputs/case0/solve.exo'
-# kpiFileAddress = 'boxKPI.csv'
-# metricFileName = "metrics.csv"
 
 solveexoFileAddress = sys.argv[1]
 kpiFileAddress = sys.argv[2]
@@ -23,11 +18,11 @@ individualImages = True
 magnification = 2
 
 # Read the desired outputs/metrics from the csv file:
-fp_csvin = data_IO.open_file(kpiFileAddress)
-kpihash = pvutils.read_csv(fp_csvin)
-fp_csvin.close()
-
-print(kpihash)
+fp_jsonIn = data_IO.open_file(kpiFileAddress)
+kpihash = json.load(fp_jsonIn)
+kpihash = pvutils.byteify(kpihash)
+fp_jsonIn.close()
+print kpihash
 
 cellsarrays = pvutils.getfieldsfromkpihash(kpihash)
 
@@ -54,7 +49,7 @@ solveExo.ElementBlocks = ['PNT', 'C3D20 C3D20R', 'COMPOSITE LAYER C3D20', 'Beam 
                           '2-node 1d genuine network elem']
 
 latesttime = animationScene1.TimeKeeper.TimestepValues[-1]
-print "Latest Time: ",latesttime
+print("Latest Time: ",latesttime)
 
 # get active view
 renderView1 = GetActiveViewOrCreate('RenderView')
@@ -93,17 +88,18 @@ camera=GetActiveCamera()
 
 print("Generating KPIs")
 
-# Make outputDir if it doesn't exist already
-if not(os.path.exists(outputDir)):
-    os.makedirs(outputDir)
+# Set component to "Magnitude" if not given for vector/tensor fields
+for kpi in kpihash:
+    kpihash[kpi] = pvutils.correctfieldcomponent(solveExo, kpihash[kpi])
 
 fp_csv_metrics = data_IO.open_file(outputDir + "/" + metricFileName, "w")
 fp_csv_metrics.write(",".join(['metric','ave','min','max'])+"\n")
 
 renderView1.InteractionMode = '2D'
 for kpi in kpihash:
-    kpitype = kpihash[kpi]['type'].split("_")[0]
-    kpifield_comp = kpihash[kpi]['field']
+    kpitype = kpihash[kpi]['type']
+    kpifield = kpihash[kpi]['field']
+    kpiComp = kpihash[kpi]['fieldComponent']
 
     try:
         kpiimage = kpihash[kpi]['image'].split("_")[0]
@@ -115,7 +111,6 @@ for kpi in kpihash:
         if kpiimage != "None" and kpiimage != "" and kpiimage != "plot":
             pvutils.adjustCamera(kpiimage, renderView1)
     print(kpi)
-
     if kpitype=="Slice":
         d = pvutils.createSlice(kpi, kpihash, solveExo, solveDisplay, individualImages)
     elif kpitype== "Clip":
@@ -127,7 +122,7 @@ for kpi in kpihash:
     elif kpitype== "Volume":
         d = pvutils.createVolume(kpi, kpihash, solveExo)
 
-    datarange = pvutils.getdatarange(d, kpifield_comp)
+    datarange = pvutils.getdatarange(d, kpifield, kpiComp)
 
     if kpitype == "Probe":
         average=(datarange[0]+datarange[1])/2
@@ -136,11 +131,11 @@ for kpi in kpihash:
     elif kpitype == "Slice":
         # get kpi field value and area - average = value/area
         integrateVariables = IntegrateVariables(Input=d)
-        average= pvutils.getdatarange(integrateVariables, kpifield_comp)[0]\
+        average= pvutils.getdatarange(integrateVariables, kpifield, kpiComp)[0]\
                  / integrateVariables.CellData['Area'].GetRange()[0]
     elif kpitype == "Volume" or kpitype == "Clip":
         integrateVariables = IntegrateVariables(Input=d)
-        average= pvutils.getdatarange(integrateVariables, kpifield_comp)[0]\
+        average= pvutils.getdatarange(integrateVariables, kpifield, kpiComp)[0]\
                  / integrateVariables.CellData['Volume'].GetRange()[0]
 
     fp_csv_metrics.write(",".join([kpi,str(average),str(datarange[0]),str(datarange[1])])

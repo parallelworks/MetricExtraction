@@ -1,0 +1,52 @@
+{
+    "sliceNT": {
+        "opacity": "0.7", 
+        "invertcolor": "0", 
+        "min": "25", 
+        "max": "93", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "NT", 
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "center center -0.1", 
+        "type": "Slice",
+		"plane": "Z"
+    }, 
+    "clipHFLX": {
+        "opacity": "0.9", 
+        "invertcolor": "0", 
+        "min": "-1200", 
+        "max": "1700", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "HFL", 
+        "fieldComponent": "X", 		
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "center center -0.1", 
+        "type": "Clip",
+		"plane": "Y",
+		"invert": "false"		
+    }, 
+    "lineS_XY": {
+        "field": "S", 
+        "fieldComponent": "XY", 		
+        "image": "plot", 
+        "type": "Line", 
+		"resolution": "20",
+        "position": "0.0 -5.0 0.0 0.0 5.0 0.0"
+    }, 
+    "volHFLX": {
+        "field": "HFL", 
+        "fieldComponent": "X", 		
+        "type": "Volume", 
+        "position": "-2 3 -3 -.5 -.1 4"
+    }, 
+    "probeUMag": {
+        "field": "U", 
+        "fieldComponent": "Magnitude", 		
+        "type": "Probe", 
+        "position": "0.0 -5.0 0.0 "
+    }
+}

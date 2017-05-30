@@ -1,0 +1,98 @@
+{
+    "sliceNT": {
+        "opacity": "0.7", 
+        "invertcolor": "0", 
+        "min": "25", 
+        "max": "93", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "NT", 
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "center center -0.1", 
+        "type": "Slice",
+		"plane": "Z"
+    }, 
+    "clipHFLX": {
+        "opacity": "0.7", 
+        "invertcolor": "0", 
+        "min": "-1200", 
+        "max": "1700", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "HFL", 
+        "fieldComponent": "X", 		
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "center center -0.1", 
+        "type": "Clip",
+		"plane": "Y"
+    }, 
+    "clipNT": {
+        "opacity": "0.7", 
+        "invertcolor": "0", 
+        "min": "25", 
+        "max": "93", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "NT", 
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "center center -0.1", 
+        "type": "Clip",
+		"plane": "Z",
+		"invert": "true"		
+    }, 
+    "lineS": {
+        "field": "S", 
+        "fieldComponent": "XY", 		
+        "image": "plot", 
+        "type": "Line", 
+		"resolution": "20",
+        "position": "0.0 -5.0 0.0 0.0 5.0 0.0"
+    }, 
+    "lineNT": {
+        "field": "NT", 
+        "image": "plot", 
+        "type": "Line", 
+		"resolution": "20",
+        "position": "0.0 -5.0 0.0 0.0 5.0 0.0"
+    }, 
+    "volHFLX": {
+        "field": "HFL", 
+        "fieldComponent": "X", 		
+        "type": "Volume", 
+        "position": "-2 3 -3 -.5 -.1 4"
+    }, 
+    "probeU": {
+        "field": "U", 
+        "fieldComponent": "Magnitude", 		
+        "type": "Probe", 
+        "position": "0.0 -5.0 0.0 "
+    }, 
+    "sliceHFLMag": {
+        "opacity": "0.7", 
+        "invertcolor": "0", 
+        "min": "730", 
+        "max": "1800", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "HFL", 
+        "fieldComponent": "Magnitude", 		
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "center center -0.1", 
+        "type": "Slice",
+		"plane": "Z"
+    }, 
+    "volNT": {
+        "field": "NT", 
+        "type": "Volume", 
+        "position": "-2 3 -3 -.5 -.1 4"
+    }, 
+    "probeNT": {
+        "field": "NT", 
+        "type": "Probe", 
+        "position": "0.0 -5.0 0.0 "
+    }
+}
