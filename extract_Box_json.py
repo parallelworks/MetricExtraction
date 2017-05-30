@@ -97,12 +97,13 @@ fp_csv_metrics.write(",".join(['metric','ave','min','max'])+"\n")
 
 renderView1.InteractionMode = '2D'
 for kpi in kpihash:
-    kpitype = kpihash[kpi]['type']
-    kpifield = kpihash[kpi]['field']
-    kpiComp = kpihash[kpi]['fieldComponent']
+    metrichash = kpihash[kpi]
+    kpitype = metrichash['type']
+    kpifield = metrichash['field']
+    kpiComp = metrichash['fieldComponent']
 
     try:
-        kpiimage = kpihash[kpi]['image'].split("_")[0]
+        kpiimage = metrichash['image'].split("_")[0]
     except:
         kpiimage = "None"
     if individualImages:
@@ -112,15 +113,15 @@ for kpi in kpihash:
             pvutils.adjustCamera(kpiimage, renderView1)
     print(kpi)
     if kpitype=="Slice":
-        d = pvutils.createSlice(kpi, kpihash, solveExo, solveDisplay, individualImages)
+        d = pvutils.createSlice(metrichash, solveExo, solveDisplay, individualImages)
     elif kpitype== "Clip":
-        d = pvutils.createClip(kpi, kpihash, solveExo, solveDisplay, individualImages)
+        d = pvutils.createClip(metrichash, solveExo, solveDisplay, individualImages)
     elif kpitype== "Probe":
-        d = pvutils.createProbe(kpi, kpihash, solveExo)
+        d = pvutils.createProbe(metrichash, solveExo)
     elif kpitype== "Line":
-        d,ave = pvutils.createLine(kpi, kpihash, solveExo, outputDir)
+        d,ave = pvutils.createLine(metrichash, kpi, solveExo, outputDir)
     elif kpitype== "Volume":
-        d = pvutils.createVolume(kpi, kpihash, solveExo)
+        d = pvutils.createVolume(metrichash, solveExo)
 
     datarange = pvutils.getdatarange(d, kpifield, kpiComp)
 

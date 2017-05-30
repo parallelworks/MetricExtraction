@@ -87,46 +87,46 @@ def getdatarange(datasource, kpifld, kpifldcomp):
     return datarange
 
 
-def correctfieldcomponent(datasource, kpihash):
+def correctfieldcomponent(datasource, metrichash):
     """
     Set "fieldComponent" to "Magnitude" if the component of vector/tensor fields is not given. For scalar fields set 
     "fieldComponent" to an empty string.
     """
-    kpifld = kpihash['field']
+    kpifld = metrichash['field']
     arrayInfo = datasource.PointData[kpifld]
     if isfldScalar(arrayInfo):
-        kpihash['fieldComponent'] = ''
+        metrichash['fieldComponent'] = ''
     else:
-        if not 'fieldComponent' in kpihash:
-            kpihash['fieldComponent'] = 'Magnitude'
-    return kpihash
+        if not 'fieldComponent' in metrichash:
+            metrichash['fieldComponent'] = 'Magnitude'
+    return metrichash
 
 
-def colorMetric(d, kpi, kpihash):
+def colorMetric(d, metrichash):
     display = GetDisplayProperties(d)
 
-    kpifld = kpihash[kpi]['field']
-    kpifldcomp = kpihash[kpi]['fieldComponent']
+    kpifld = metrichash['field']
+    kpifldcomp = metrichash['fieldComponent']
 
     ColorBy(display, ('POINTS', kpifld, kpifldcomp))
     Render()
     UpdateScalarBars()
     ctf = GetColorTransferFunction(kpifld)
-    ctf.ApplyPreset(kpihash[kpi]["colorscale"], True)
-    if kpihash[kpi]["invertcolor"] == "1":
+    ctf.ApplyPreset(metrichash["colorscale"], True)
+    if metrichash["invertcolor"] == "1":
         ctf.InvertTransferFunction()
     datarange = getdatarange(d, kpifld, kpifldcomp)
 
     min = datarange[0]
     max = datarange[1]
-    if kpihash[kpi]["min"] != "auto" and kpihash[kpi]["min"] != "":
-         min = float(kpihash[kpi]["min"]) 
-    if kpihash[kpi]["max"] != "auto" and kpihash[kpi]["max"] != "":
-         max = float(kpihash[kpi]["max"]) 
+    if metrichash["min"] != "auto" and metrichash["min"] != "":
+         min = float(metrichash["min"])
+    if metrichash["max"] != "auto" and metrichash["max"] != "":
+         max = float(metrichash["max"])
     ctf.RescaleTransferFunction(min, max)
-    if int(kpihash[kpi]["discretecolors"]) > 0:
+    if int(metrichash["discretecolors"]) > 0:
         ctf.Discretize = 1
-        ctf.NumberOfTableValues = int(kpihash[kpi]["discretecolors"])
+        ctf.NumberOfTableValues = int(metrichash["discretecolors"])
     else:
         ctf.Discretize = 0
     GetScalarBar(ctf).TitleColor = [0,0,0]
@@ -134,7 +134,7 @@ def colorMetric(d, kpi, kpihash):
     GetScalarBar(ctf).Orientation = "Horizontal"
     
     # center
-    imgtype=kpihash[kpi]['image'].split("_")[0]
+    imgtype=metrichash['image'].split("_")[0]
     if (imgtype!="iso"):
         GetScalarBar(ctf).Position = [0.25,0.05]
         GetScalarBar(ctf).Position2 = [0.5,0]
@@ -147,17 +147,17 @@ def colorMetric(d, kpi, kpihash):
     #    display.SetScalarBarVisibility(renderView1, False)
 
 
-def createSlice(kpi, kpihash, dataReader, dataDisplay, isIndivImgs):
+def createSlice(metrichash, dataReader, dataDisplay, isIndivImgs):
     camera = GetActiveCamera()
     renderView1 = GetActiveViewOrCreate('RenderView')
 
-    opacity=float(kpihash[kpi]['opacity'])
-    bodyopacity=float(kpihash[kpi]['bodyopacity'])
+    opacity=float(metrichash['opacity'])
+    bodyopacity=float(metrichash['bodyopacity'])
     if isIndivImgs:
         dataDisplay.Opacity = bodyopacity
     slicetype = "Plane"
-    plane = kpihash[kpi]['plane']
-    origin = kpihash[kpi]['position'].split(" ")
+    plane = metrichash['plane']
+    origin = metrichash['position'].split(" ")
     s = Slice(Input=dataReader)
     s.SliceType = slicetype
     s.SliceType.Origin = camera.GetFocalPoint()
@@ -174,26 +174,26 @@ def createSlice(kpi, kpihash, dataReader, dataDisplay, isIndivImgs):
     sDisplay.DiffuseColor = [0.0, 1.0, 0.0]
     sDisplay.Specular = 0
     sDisplay.Opacity = opacity
-    colorMetric(s, kpi, kpihash)
+    colorMetric(s, metrichash)
     return s
 
 
-def createClip(kpi, kpihash, data_reader, data_display, isIndivImages):
+def createClip(metrichash, data_reader, data_display, isIndivImages):
     camera = GetActiveCamera()
     renderView1 = GetActiveViewOrCreate('RenderView')
 
-    opacity = float(kpihash[kpi]['opacity'])
-    bodyopacity = float(kpihash[kpi]['bodyopacity'])
+    opacity = float(metrichash['opacity'])
+    bodyopacity = float(metrichash['bodyopacity'])
     if isIndivImages == True:
         data_display.Opacity = bodyopacity
     cliptype = "Plane"
-    plane = kpihash[kpi]['plane']  #kpihash[kpi]['type'].split("_")[1]
-    if 'invert' in kpihash[kpi].keys():
-        invert = data_IO.str2bool(kpihash[kpi]['invert'])
+    plane = metrichash['plane']
+    if 'invert' in metrichash.keys():
+        invert = data_IO.str2bool(metrichash['invert'])
     else:
         invert = 0
 
-    origin=kpihash[kpi]['position'].split(" ")
+    origin=metrichash['position'].split(" ")
     s = Clip(Input=data_reader)
     s.ClipType = cliptype
     s.ClipType.Origin = camera.GetFocalPoint()
@@ -211,19 +211,19 @@ def createClip(kpi, kpihash, data_reader, data_display, isIndivImages):
     sDisplay.DiffuseColor = [0.0, 1.0, 0.0]
     sDisplay.Specular = 0
     sDisplay.Opacity = opacity
-    colorMetric(s, kpi, kpihash)
+    colorMetric(s, metrichash)
     try:
-        if kpihash[kpi]['image'].split("_")[1] == "solo":
+        if metrichash['image'].split("_")[1] == "solo":
             Hide(data_reader, renderView1)
     except:
         pass
     return s
 
 
-def createProbe(kpi, kpihash, data_reader):
+def createProbe(metrichash, data_reader):
     camera = GetActiveCamera()
     renderView1 = GetActiveViewOrCreate('RenderView')
-    center = kpihash[kpi]['position'].split(" ")
+    center = metrichash['position'].split(" ")
     p = ProbeLocation(Input=data_reader, ProbeType='Fixed Radius Point Source')
     p.PassFieldArrays = 1
     #p.ProbeType.Center = [1.2176899909973145, 1.2191989705897868, 1.5207239668816328]
@@ -250,8 +250,8 @@ def createProbe(kpi, kpihash, data_reader):
     return p
 
 
-def createVolume(kpi, kpihash, data_reader):
-    bounds = [float(x) for x in kpihash[kpi]['position'].split(" ")]
+def createVolume(metrichash, data_reader):
+    bounds = [float(x) for x in metrichash['position'].split(" ")]
     renderView1 = GetActiveViewOrCreate('RenderView')
     c = Clip(Input=data_reader)
     c.ClipType = 'Box'
@@ -260,7 +260,7 @@ def createVolume(kpi, kpihash, data_reader):
     c.ClipType.Bounds = bounds
     c.InsideOut = 1
     cDisplay = Show(c, renderView1)
-    cDisplay.ColorArrayName = ['Points', kpihash[kpi]['field']]
+    cDisplay.ColorArrayName = ['Points', metrichash['field']]
     cDisplay.SetRepresentationType('Surface')
     cDisplay.DiffuseColor = [1.0, 1.0, 0.0]
     cDisplay.Specular = 0
@@ -268,13 +268,13 @@ def createVolume(kpi, kpihash, data_reader):
     return c
 
 
-def createLine(kpi, kpihash, data_reader, outputDir="."):
-    resolution = int(kpihash[kpi]['resolution'])
+def createLine(metrichash, kpi, data_reader, outputDir="."):
+    resolution = int(metrichash['resolution'])
     try:
-        image = kpihash[kpi]['image']
+        image = metrichash['image']
     except:
         image = None
-    point = [x for x in kpihash[kpi]['position'].split(" ")]
+    point = [x for x in metrichash['position'].split(" ")]
 
     camera = GetActiveCamera()
     renderView1 = GetActiveViewOrCreate('RenderView')
@@ -310,8 +310,8 @@ def createLine(kpi, kpihash, data_reader, outputDir="."):
     # get the line data
     pl = servermanager.Fetch(l)
 
-    kpifld = kpihash[kpi]['field']
-    kpiComp = kpihash[kpi]['fieldComponent']
+    kpifld = metrichash['field']
+    kpiComp = metrichash['fieldComponent']
     if (image == "plot"):
         f=open(outputDir+"/plot_"+kpi+".csv","w")
         f.write(",".join(["point", kpifld + "_" + kpiComp])+"\n")

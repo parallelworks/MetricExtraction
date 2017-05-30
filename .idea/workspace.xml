@@ -2,27 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="29aabed8-438b-4521-a595-9ae0db5ea127" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations/configuration_for_pvpython.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations/extract_PV_sep.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/README_json.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/README_json0.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/README_json0.org" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/boxKPI.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/boxKPI_clip.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/boxKPI_short.csv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/boxKPI_short.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/boxKPI_test.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/convertcsv2json.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/extract_Box_json.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plot.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pvutils_csv.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testKPIreaderCSV.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testKPIreaderJSON.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_IO.py" afterPath="$PROJECT_DIR$/data_IO.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/extractBox.py" afterPath="$PROJECT_DIR$/extractBox.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/extract_Box_json.py" afterPath="$PROJECT_DIR$/extract_Box_json.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pvutils.py" afterPath="$PROJECT_DIR$/pvutils.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,8 +19,8 @@
       <file leaf-file-name="extract_Box_json.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/extract_Box_json.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="112" column="13" lean-forward="false" selection-start-line="112" selection-start-column="13" selection-end-line="112" selection-end-column="13" />
+            <state relative-caret-position="246">
+              <caret line="123" column="45" lean-forward="false" selection-start-line="123" selection-start-column="45" selection-end-line="123" selection-end-column="45" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -50,7 +31,7 @@
       <file leaf-file-name="extractBox.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/extractBox.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
+            <state relative-caret-position="1872">
               <caret line="104" column="48" lean-forward="false" selection-start-line="104" selection-start-column="48" selection-end-line="104" selection-end-column="48" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
@@ -59,7 +40,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="testKPIreaderJSON.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="testKPIreaderJSON.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/testKPIreaderJSON.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="432">
@@ -95,11 +76,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pvutils.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="pvutils.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pvutils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3042">
-              <caret line="190" column="22" lean-forward="false" selection-start-line="190" selection-start-column="22" selection-end-line="190" selection-end-column="22" />
+            <state relative-caret-position="198">
+              <caret line="11" column="7" lean-forward="true" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -120,7 +101,13 @@
     <findStrings>
       <find>field</find>
       <find>print</find>
+      <find>kpihash[kpi]</find>
+      <find>kpihash</find>
     </findStrings>
+    <replaceStrings>
+      <replace>metricDict</replace>
+      <replace>metrichash</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -135,9 +122,9 @@
         <option value="$PROJECT_DIR$/extractBox.py" />
         <option value="$PROJECT_DIR$/pvutils_csv.py" />
         <option value="$PROJECT_DIR$/data_IO.py" />
+        <option value="$PROJECT_DIR$/testKPIreaderJSON.py" />
         <option value="$PROJECT_DIR$/extract_Box_json.py" />
         <option value="$PROJECT_DIR$/pvutils.py" />
-        <option value="$PROJECT_DIR$/testKPIreaderJSON.py" />
       </list>
     </option>
   </component>
@@ -355,7 +342,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="utils" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/extract_Box_json.py" />
-      <option name="PARAMETERS" value="../outputs/case0/solve.exo boxKPI.json   testOut/ metrics_json.csv" />
+      <option name="PARAMETERS" value="../outputs/case0/solve.exo boxKPI.json   testOutJson2/ metrics_json.csv" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <method />
@@ -397,14 +384,14 @@
     <frame x="-1" y="-11" width="1922" height="1092" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2524013" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2524013" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3172043" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2497332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -627,41 +614,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/extractBox.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="104" column="48" lean-forward="false" selection-start-line="104" selection-start-column="48" selection-end-line="104" selection-end-column="48" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pythonShellScratch">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
           <caret line="510" column="24" lean-forward="false" selection-start-line="510" selection-start-column="24" selection-end-line="510" selection-end-column="24" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/extract_Box_json.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="112" column="13" lean-forward="false" selection-start-line="112" selection-start-column="13" selection-end-line="112" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pvutils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3042">
-          <caret line="190" column="22" lean-forward="false" selection-start-line="190" selection-start-column="22" selection-end-line="190" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -671,6 +628,36 @@
           <caret line="24" column="27" lean-forward="false" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/extractBox.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1872">
+          <caret line="104" column="48" lean-forward="false" selection-start-line="104" selection-start-column="48" selection-end-line="104" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/extract_Box_json.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="246">
+          <caret line="123" column="45" lean-forward="false" selection-start-line="123" selection-start-column="45" selection-end-line="123" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pvutils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="7" lean-forward="true" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
           </folding>
         </state>
       </provider>
