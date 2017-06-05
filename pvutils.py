@@ -1,6 +1,9 @@
 from paraview.simple import *
 import sys
 import data_IO
+import os
+import subprocess
+import shutil
 
 def byteify(input):
     """
@@ -29,6 +32,18 @@ def planeNormalFromName(planeName):
     if planeName == "Z" or planeName == "z":
         normal = [0.0, 0.0, 1.0]
     return normal
+
+
+def setviewposition(position_key, camera):
+    center = position_key.split()
+    positionXYZ = list(camera.GetFocalPoint())
+    if center[0] != "center":
+        positionXYZ[0] = float(center[0])
+    if center[1] != "center":
+        positionXYZ[1] = float(center[1])
+    if center[2] != "center":
+        positionXYZ[2] = float(center[2])
+    return positionXYZ
 
 
 def read_csv(f):
@@ -157,16 +172,10 @@ def createSlice(metrichash, dataReader, dataDisplay, isIndivImgs):
         dataDisplay.Opacity = bodyopacity
     slicetype = "Plane"
     plane = metrichash['plane']
-    origin = metrichash['position'].split(" ")
+
     s = Slice(Input=dataReader)
     s.SliceType = slicetype
-    s.SliceType.Origin = camera.GetFocalPoint()
-    if origin[0] != "center":
-        s.SliceType.Origin[0] = float(origin[0])
-    if origin[1] != "center":
-        s.SliceType.Origin[1] = float(origin[1])
-    if origin[2] != "center":
-        s.SliceType.Origin[2] = float(origin[2])
+    s.SliceType.Origin = setviewposition(metrichash['position'], camera)
     s.SliceType.Normal = planeNormalFromName(plane)
     sDisplay = Show(s, renderView1)
     sDisplay.ColorArrayName = [None, '']
@@ -193,17 +202,12 @@ def createClip(metrichash, data_reader, data_display, isIndivImages):
     else:
         invert = 0
 
-    origin=metrichash['position'].split(" ")
+
     s = Clip(Input=data_reader)
     s.ClipType = cliptype
     s.ClipType.Origin = camera.GetFocalPoint()
     s.InsideOut = invert
-    if origin[0] != "center":
-        s.ClipType.Origin[0] = float(origin[0])
-    if origin[1] != "center":
-        s.ClipType.Origin[1] = float(origin[1])
-    if origin[2] != "center":
-        s.ClipType.Origin[2] = float(origin[2])
+    s.ClipType.Origin = setviewposition(metrichash['position'],camera)
     s.ClipType.Normal = planeNormalFromName(plane)
     sDisplay = Show(s, renderView1)
     sDisplay.ColorArrayName = [None, '']
@@ -223,27 +227,15 @@ def createClip(metrichash, data_reader, data_display, isIndivImages):
 def createProbe(metrichash, data_reader):
     camera = GetActiveCamera()
     renderView1 = GetActiveViewOrCreate('RenderView')
-    center = metrichash['position'].split(" ")
+
     p = ProbeLocation(Input=data_reader, ProbeType='Fixed Radius Point Source')
     p.PassFieldArrays = 1
     #p.ProbeType.Center = [1.2176899909973145, 1.2191989705897868, 1.5207239668816328]
-    p.ProbeType.Center = camera.GetFocalPoint()
-    if center[0] != "center":
-        p.ProbeType.Center[0] = float(center[0])
-    if center[1] != "center":
-        p.ProbeType.Center[1] = float(center[1])
-    if center[2] != "center":
-        p.ProbeType.Center[2] = float(center[2])
+    p.ProbeType.Center = setviewposition(metrichash['position'], camera)
     p.ProbeType.NumberOfPoints = 1
     p.ProbeType.Radius = 0.0
     ps = Sphere(Radius=0.025, ThetaResolution=32)
-    ps.Center = camera.GetFocalPoint()
-    if center[0] != "center":
-        ps.Center[0] = float(center[0])
-    if center[1] != "center":
-        ps.Center[1] = float(center[1])
-    if center[2] != "center":
-        ps.Center[2] = float(center[2])
+    ps.Center = setviewposition(metrichash['position'], camera)
     psDisplay = Show(ps, renderView1)
     psDisplay.DiffuseColor = [1.0, 0.0, 0.0]
     psDisplay.Opacity = 0.8
@@ -274,7 +266,7 @@ def createLine(metrichash, kpi, data_reader, outputDir="."):
         image = metrichash['image']
     except:
         image = None
-    point = [x for x in metrichash['position'].split(" ")]
+    point = [x for x in metrichash['position'].split()]
 
     camera = GetActiveCamera()
     renderView1 = GetActiveViewOrCreate('RenderView')
@@ -372,5 +364,18 @@ def adjustCamera(view, renderView1):
         camera.SetPosition(0,0,-1)
         renderView1.ResetCamera()
         camera.Roll(-90)
-        
 
+
+def makeAnimation(outputDir, kpi, magnification, deleteFrames=True):
+    animationFramesDir = outputDir + '/animFrames'
+    if not (os.path.exists(animationFramesDir)):
+        os.makedirs(animationFramesDir)
+
+    WriteAnimation(animationFramesDir + '/' + "/out_" + kpi + ".png", Magnification=magnification, FrameRate=15.0,
+                   Compression=False)
+
+    subprocess.call(["convert", "-delay", "15",  "-loop",  "0", animationFramesDir + "/out_" + kpi + ".*.png",
+                     outputDir + "/out_" + kpi + ".gif"])
+
+    if deleteFrames:
+        shutil.rmtree(animationFramesDir)

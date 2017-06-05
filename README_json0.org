@@ -65,6 +65,20 @@ If an image is desired, define parameters below:
 -  *bodyopacity*: opacity of the base domain (can be used to hide
    domain)
 
+If animation is desired, define parameters below:
+- *animation*: "true"
+- *image*: iso, top, bottom, left, right, front, back - Line type can
+  specify "plot" type to plot the line
+- *min*: data range min
+- *max*: data range max
+- *colorscale*: color data by [[http://www.paraview.org/Wiki/images/7/73/Luts.png][ParaView built in color maps]]
+- *invertcolor*: invert the color scale - Yes=1, No=0
+- *discretecolors*: discretize the colored data by X number of values
+- *opacity*: opacity of the metric on the image
+- *bodyopacity*: opacity of the base domain (can be used to hide
+  domain)
+
+
 Example input file:
 #+BEGIN_EXAMPLE
 {

@@ -4,6 +4,7 @@ import sys
 import pvutils
 import data_IO
 
+
 if len(sys.argv) < 5:
     print("Number of provided arguments: ", len(sys.argv) - 1)
     print("Usage: pvpython extractBox_json.py  <solve.exo>  <desiredMetrics.json> <outputDir> <outputMetrics.csv>")
@@ -13,7 +14,7 @@ if len(sys.argv) < 5:
 solveexoFileAddress = sys.argv[1]
 kpiFileAddress = sys.argv[2]
 outputDir = sys.argv[3]
-metricFileName = sys.argv[4]
+metricFile = sys.argv[4]
 individualImages = True
 magnification = 2
 
@@ -92,7 +93,7 @@ print("Generating KPIs")
 for kpi in kpihash:
     kpihash[kpi] = pvutils.correctfieldcomponent(solveExo, kpihash[kpi])
 
-fp_csv_metrics = data_IO.open_file(outputDir + "/" + metricFileName, "w")
+fp_csv_metrics = data_IO.open_file(metricFile, "w")
 fp_csv_metrics.write(",".join(['metric','ave','min','max'])+"\n")
 
 renderView1.InteractionMode = '2D'
@@ -102,10 +103,11 @@ for kpi in kpihash:
     kpifield = metrichash['field']
     kpiComp = metrichash['fieldComponent']
 
-    try:
-        kpiimage = metrichash['image'].split("_")[0]
-    except:
+    if 'image' in metrichash:
+        kpiimage = metrichash['image']
+    else:
         kpiimage = "None"
+
     if individualImages:
         HideAll()
         Show(solveExo, renderView1)
@@ -145,6 +147,13 @@ for kpi in kpihash:
     if individualImages:
         if kpiimage != "None" and kpiimage != "" and kpiimage != "plot":
             SaveScreenshot(outputDir + "/out_" + kpi + ".png", magnification=magnification, quality=100)
+
+    if 'animation' in metrichash:
+        makeAnim = data_IO.str2bool(metrichash['animation'])
+    else:
+        makeAnim = False
+    if makeAnim:
+        pvutils.makeAnimation(outputDir, kpi, magnification)
 
 
 fp_csv_metrics.close()
