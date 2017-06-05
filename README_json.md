@@ -3,7 +3,7 @@ Metric Extraction
 
 The below describes a json file syntax created to extract field information from simulation domains. It uses the ParaView Python API to extract these metrics in the form of Probes, Lines, Slices, Clips and Volumes.
 
--   To convert older csv files to json file use convertcsv2json.py
+-   To convert older csv files to json file use convertcsv2json.py. **Note** that the converted json file might need some editing (e.g., type, field and fieldComponent fields).
 -   [Hjson](http://hjson.org/) can be used to convert json files to Hjson files (for easier readability) and vice versa
 
 The below parameters need to be specified for each of the desired metrics:
@@ -34,6 +34,18 @@ Syntax for extracting various metric types are described below:
 
 If an image is desired, define parameters below:
 
+-   **image**: iso, top, bottom, left, right, front, back - Line type can specify "plot" type to plot the line
+-   **min**: data range min
+-   **max**: data range max
+-   **colorscale**: color data by ![](http://www.paraview.org/Wiki/images/7/73/Luts.png)
+-   **invertcolor**: invert the color scale - Yes=1, No=0
+-   **discretecolors**: discretize the colored data by X number of values
+-   **opacity**: opacity of the metric on the image
+-   **bodyopacity**: opacity of the base domain (can be used to hide domain)
+
+If animation is desired, define parameters below:
+
+-   **animation**: "true"
 -   **image**: iso, top, bottom, left, right, front, back - Line type can specify "plot" type to plot the line
 -   **min**: data range min
 -   **max**: data range max
