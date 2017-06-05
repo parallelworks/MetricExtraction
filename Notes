@@ -1,4 +1,0 @@
-Copy of scracth
-
-
-pandoc --from org --to markdown_github  README_json0.org  -s -o README_json0.md 

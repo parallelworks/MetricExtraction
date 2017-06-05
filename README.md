@@ -37,7 +37,7 @@ If an image is desired, define parameters below:
 -   **image**: iso, top, bottom, left, right, front, back - Line type can specify "plot" type to plot the line
 -   **min**: data range min
 -   **max**: data range max
--   **colorscale**: color data by ![](http://www.paraview.org/Wiki/images/7/73/Luts.png)
+-   **colorscale**: color data by (<https://www.paraview.org/Wiki/Colormaps>)
 -   **invertcolor**: invert the color scale - Yes=1, No=0
 -   **discretecolors**: discretize the colored data by X number of values
 -   **opacity**: opacity of the metric on the image
@@ -49,7 +49,7 @@ If animation is desired, define parameters below:
 -   **image**: iso, top, bottom, left, right, front, back - Line type can specify "plot" type to plot the line
 -   **min**: data range min
 -   **max**: data range max
--   **colorscale**: color data by ![](http://www.paraview.org/Wiki/images/7/73/Luts.png)
+-   **colorscale**: color data by Paraview built in color maps (<https://www.paraview.org/Wiki/Colormaps>)
 -   **invertcolor**: invert the color scale - Yes=1, No=0
 -   **discretecolors**: discretize the colored data by X number of values
 -   **opacity**: opacity of the metric on the image
@@ -123,6 +123,6 @@ volHFLX,273.432022586,-435.622624107,1309.98065054
 lineS_XY,-0.0600564658676,-5.07893304083,4.4496566424
 ```
 
-![Metric example](metric_example_json.png)
+![Metric example](example_pngs/metric_example_json.png)
 
-![Plot example](plot_example_json.png)
+![Plot example](example_pngs/plot_example_json.png)

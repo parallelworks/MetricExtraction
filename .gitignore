@@ -1,5 +1,4 @@
 /.project
-/*.png
 /*.pyc
 /*~
 /plot_lineNT.csv
@@ -15,3 +14,4 @@
 /testOutJson2/
 /outputs/
 /backup_PycharmFiles/
+/__pycache__/
