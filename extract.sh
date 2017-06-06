@@ -1,4 +1,7 @@
-#!/bin/bash 
+#!/bin/bash
+
+# USAGE - ./extract.sh /opt/paraview530/bin utils/extract.py sample_inputs/solve.exo sample_inputs/beadOnPlateKPI.json example_outputs example_outputs/metrics.csv utils/plot.py
+
 paraviewPath=$1
 pvpythonExtractScript=$2
 resultsExoFile=$3
@@ -18,3 +21,4 @@ for f in ${pvOutputDir}plot_*.csv;do
 	echo $f
     python $pythonPlotScript $f
 done
+

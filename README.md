@@ -112,7 +112,7 @@ Example input file:
 }
 ```
 
-*Resulting Metric Extractors (note each metric image would be exported separated):* Example metric output (csv file):
+*Resulting Metric Extractors (note each metric image would be exported separated):*
 
 ``` example
 metric,ave,min,max
@@ -123,6 +123,6 @@ volHFLX,273.432022586,-435.622624107,1309.98065054
 lineS_XY,-0.0600564658676,-5.07893304083,4.4496566424
 ```
 
-![Metric example](example_pngs/metric_example_json.png)
+![Metric example](example_outputs/metric_example_json.png)
 
-![Plot example](example_pngs/plot_example_json.png)
+![Plot example](example_outputs/plot_example_json.png)
