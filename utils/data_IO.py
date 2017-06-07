@@ -1,5 +1,6 @@
 import sys
 import re
+import os
 
 def xstr(s):
     return '' if s is None else str(s)
@@ -81,6 +82,9 @@ def read_int_from_file_pointer(file_pointer, flag_str, delimiter=None,
 
 
 def open_file(file_name, open_mode="r"):
+    if open_mode == "w":
+        if not os.path.exists(os.path.dirname(file_name)):
+            os.makedirs(os.path.dirname(file_name))
     try:
         file_pointer = open(file_name, open_mode)
         return file_pointer

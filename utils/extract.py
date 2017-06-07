@@ -3,6 +3,7 @@ import json
 import sys
 import pvutils
 import data_IO
+import os
 
 
 if len(sys.argv) < 5:
@@ -146,6 +147,8 @@ for kpi in kpihash:
 
     if individualImages:
         if kpiimage != "None" and kpiimage != "" and kpiimage != "plot":
+            if not (os.path.exists(outputDir)):
+                os.makedirs(outputDir)
             SaveScreenshot(outputDir + "/out_" + kpi + ".png", magnification=magnification, quality=100)
 
     if 'animation' in metrichash:
