@@ -117,6 +117,78 @@ def correctfieldcomponent(datasource, metrichash):
     return metrichash
 
 
+def getReaderTypeFromfileAddress(dataFileAddress):
+    if dataFileAddress.endswith('.exo'):
+        readerType = 'exo'
+    elif dataFileAddress.endswith('system/controlDict'):
+        readerType = 'openFOAM'
+    else:
+        print('Error: Reader type cannot be set. Please check data file address')
+        sys.exit(1)
+
+    return readerType
+
+
+def readDataFile(dataFileAddress, dataarray):
+    readerType = getReaderTypeFromfileAddress(dataFileAddress)
+    if readerType == 'exo':
+        # Read the results file : create a new 'ExodusIIReader'
+        dataReader = ExodusIIReader(FileName=dataFileAddress)
+
+        dataReader.ElementBlocks = ['PNT', 'C3D20 C3D20R', 'COMPOSITE LAYER C3D20', 'Beam B32 B32R',
+                                    'CPS8 CPE8 CAX8 S8 S8R', 'C3D8 C3D8R', 'TRUSS2', 'TRUSS2',
+                                    'CPS4R CPE4R S4 S4R', 'CPS4I CPE4I', 'C3D10', 'C3D4', 'C3D15',
+                                    'CPS6 CPE6 S6', 'C3D6', 'CPS3 CPE3 S3',
+                                    '2-node 1d network entry elem', '2-node 1d network exit elem',
+                                    '2-node 1d genuine network elem']
+
+        # only load the data that is needed
+        dataReader.PointVariables = dataarray
+    elif readerType == 'openFOAM':
+        # create a new 'OpenFOAMReader'
+        dataReader = OpenFOAMReader(FileName=dataFileAddress)
+
+        dataReader.MeshRegions = ['internalMesh']
+
+        dataReader.CellArrays = dataarray
+
+    return dataReader
+
+
+def setFrame2latestTime(renderView1):
+    # get animation scene
+    animationScene1 = GetAnimationScene()
+
+    # update animation scene based on data timesteps
+    animationScene1.UpdateAnimationUsingDataTimeSteps()
+
+    latesttime = animationScene1.TimeKeeper.TimestepValues[-1]
+    print("Setting view to latest Time: " + str(latesttime))
+
+    renderView1.ViewTime = latesttime
+    return renderView1
+
+
+def initRenderView (dataReader, viewSize, backgroundColor):
+    # get active view
+    renderView1 = GetActiveViewOrCreate('RenderView')
+
+    renderView1 = setFrame2latestTime(renderView1)
+
+    # set the view size
+    renderView1.ViewSize = viewSize
+    renderView1.Background = backgroundColor
+
+    # show data in view
+    readerDisplay = Show(dataReader, renderView1)
+
+    # reset view to fit data
+    renderView1.ResetCamera()
+
+    return renderView1, readerDisplay
+
+
+
 def colorMetric(d, metrichash):
     display = GetDisplayProperties(d)
 
@@ -358,12 +430,12 @@ def adjustCamera(view, renderView1):
         camera.SetFocalPoint(0,0,0)
         camera.SetPosition(0,0,1)
         renderView1.ResetCamera()
-        camera.Roll(90)
+#        camera.Roll(90)
     elif view == "-Z" or view == "-z" or view == "bottom": 
         camera.SetFocalPoint(0,0,0)
         camera.SetPosition(0,0,-1)
         renderView1.ResetCamera()
-        camera.Roll(-90)
+#       camera.Roll(-90)
 
 
 def makeAnimation(outputDir, kpi, magnification, deleteFrames=True):

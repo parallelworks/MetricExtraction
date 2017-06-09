@@ -1,0 +1,36 @@
+{
+    "ClipUx": {
+        "opacity": "1", 
+        "invertcolor": "0", 
+        "min": "0", 
+        "max": "5", 
+        "image": "top", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "U", 
+        "fieldComponent": "X", 		
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "10.0  center center", 
+        "type": "Clip",
+		"plane": "X",
+		"invert": "true",
+		"animation": "false"
+    },
+    "ClipUy": {
+        "opacity": "1", 
+        "invertcolor": "0", 
+        "min": "0", 
+        "max": "4", 
+        "image": "top", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "U", 
+        "fieldComponent": "Y", 		
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "center -5.0 center", 
+        "type": "Clip",
+		"plane": "Y",
+		"invert": "false",
+		"animation": "true"
+    }
+}
