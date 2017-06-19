@@ -32,5 +32,27 @@
 		"plane": "Y",
 		"invert": "false",
 		"animation": "true"
+    },
+    "streamlinesU": {
+        "opacity": "1", 
+        "invertcolor": "0", 
+        "min": "0", 
+        "max": "2", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "U", 
+        "colorByField": "Vorticity", 		
+        "colorByFieldComponent": "Magnitude", 		
+		"position":"49 62 0 63 62 0",
+		"resolution":"10",
+		"integralDirection":"BOTH",
+        "discretecolors": "20", 
+		"tubeRadius":"0.2",
+		"maxStreamLength":"200",
+        "bodyopacity": "0.3", 
+        "type": "StreamLines",
+		"animation": "false",
+		"blender": "true",
+		"extractStats":"false"		
     }
 }

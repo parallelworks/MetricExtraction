@@ -8,7 +8,7 @@ import os
 
 if len(sys.argv) < 5:
     print("Number of provided arguments: ", len(sys.argv) - 1)
-    print("Usage: pvpython extractBox_json.py  <dataFile>  <desiredMetrics.json> <outputDir> <outputMetrics.csv>")
+    print("Usage: pvpython extract.py  <dataFile>  <desiredMetrics.json> <outputDir> <outputMetrics.csv>")
     sys.exit()
 
 
@@ -77,27 +77,36 @@ for kpi in kpihash:
         d = pvutils.createProbe(metrichash, dataReader)
     elif kpitype== "Line":
         d,ave = pvutils.createLine(metrichash, kpi, dataReader, outputDir)
+    elif kpitype== "StreamLines":
+        d = pvutils.createStreamTracer(metrichash, dataReader, readerDisplay, individualImages)
+        metrichash['extractStats'] = "False"
     elif kpitype== "Volume":
         d = pvutils.createVolume(metrichash, dataReader)
 
-    datarange = pvutils.getdatarange(d, kpifield, kpiComp)
 
-    if kpitype == "Probe":
-        average=(datarange[0]+datarange[1])/2
-    elif kpitype == "Line":
-        average=ave
-    elif kpitype == "Slice":
-        # get kpi field value and area - average = value/area
-        integrateVariables = IntegrateVariables(Input=d)
-        average= pvutils.getdatarange(integrateVariables, kpifield, kpiComp)[0]\
-                 / integrateVariables.CellData['Area'].GetRange()[0]
-    elif kpitype == "Volume" or kpitype == "Clip":
-        integrateVariables = IntegrateVariables(Input=d)
-        average= pvutils.getdatarange(integrateVariables, kpifield, kpiComp)[0]\
-                 / integrateVariables.CellData['Volume'].GetRange()[0]
+    if 'extractStats' in metrichash:
+        extractStats = data_IO.str2bool(metrichash['extractStats'])
+    else:
+        extractStats = True
 
-    fp_csv_metrics.write(",".join([kpi,str(average),str(datarange[0]),str(datarange[1])])
-                         +"\n")
+    if extractStats:
+        datarange = pvutils.getdatarange(d, kpifield, kpiComp)
+        if kpitype == "Probe":
+            average=(datarange[0]+datarange[1])/2
+        elif kpitype == "Line":
+            average=ave
+        elif kpitype == "Slice":
+            # get kpi field value and area - average = value/area
+            integrateVariables = IntegrateVariables(Input=d)
+            average= pvutils.getdatarange(integrateVariables, kpifield, kpiComp)[0]\
+                     / integrateVariables.CellData['Area'].GetRange()[0]
+        elif kpitype == "Volume" or kpitype == "Clip":
+            integrateVariables = IntegrateVariables(Input=d)
+            average= pvutils.getdatarange(integrateVariables, kpifield, kpiComp)[0]\
+                     / integrateVariables.CellData['Volume'].GetRange()[0]
+
+        fp_csv_metrics.write(",".join([kpi,str(average),str(datarange[0]),str(datarange[1])])
+                             +"\n")
 
     if individualImages:
         if kpiimage != "None" and kpiimage != "" and kpiimage != "plot":
@@ -111,6 +120,13 @@ for kpi in kpihash:
         makeAnim = False
     if makeAnim:
         pvutils.makeAnimation(outputDir, kpi, magnification)
+
+    if 'blender' in metrichash:
+        export2Blender = data_IO.str2bool(metrichash['blender'])
+    else:
+        export2Blender = False
+    if export2Blender:
+        pvutils.exportx3d(outputDir, kpi)
 
 
 fp_csv_metrics.close()

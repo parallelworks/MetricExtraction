@@ -36,13 +36,13 @@ def planeNormalFromName(planeName):
 
 def setviewposition(position_key, camera):
     center = position_key.split()
-    positionXYZ = list(camera.GetFocalPoint())
-    if center[0] != "center":
-        positionXYZ[0] = float(center[0])
-    if center[1] != "center":
-        positionXYZ[1] = float(center[1])
-    if center[2] != "center":
-        positionXYZ[2] = float(center[2])
+    nPoints = len(center)/3
+    positionXYZ = []
+    for iPoint in range(nPoints):
+        positionXYZ.extend(list(camera.GetFocalPoint()))
+        for i in range(iPoint*3, 3+iPoint*3):
+            if center[i] != "center":
+                positionXYZ[i] = float(center[i])
     return positionXYZ
 
 
@@ -155,14 +155,23 @@ def readDataFile(dataFileAddress, dataarray):
     return dataReader
 
 
-def setFrame2latestTime(renderView1):
+def getTimeSteps():
     # get animation scene
     animationScene1 = GetAnimationScene()
 
     # update animation scene based on data timesteps
     animationScene1.UpdateAnimationUsingDataTimeSteps()
 
-    latesttime = animationScene1.TimeKeeper.TimestepValues[-1]
+    timeSteps = list(animationScene1.TimeKeeper.TimestepValues)
+
+    return timeSteps
+
+
+def setFrame2latestTime(renderView1):
+
+    TimeSteps = getTimeSteps()
+
+    latesttime = TimeSteps[-1]
     print("Setting view to latest Time: " + str(latesttime))
 
     renderView1.ViewTime = latesttime
@@ -259,6 +268,57 @@ def createSlice(metrichash, dataReader, dataDisplay, isIndivImgs):
     return s
 
 
+def createStreamTracer(metrichash, data_reader, data_display, isIndivImages):
+    camera = GetActiveCamera()
+    renderView1 = GetActiveViewOrCreate('RenderView')
+
+    opacity = float(metrichash['opacity'])
+    bodyopacity = float(metrichash['bodyopacity'])
+    if isIndivImages == True:
+        data_display.Opacity = bodyopacity
+
+    streamTracer = StreamTracer(Input=data_reader,
+                                 SeedType='High Resolution Line Source')
+
+    kpifld = metrichash['field'] #!!!!!!!
+    streamTracer.Vectors = ['POINTS', kpifld]
+    LinePoints = setviewposition(metrichash['position'], camera)
+    streamTracer.SeedType.Point1 = LinePoints[0:3]
+    streamTracer.SeedType.Point2 = LinePoints[3:6]
+    streamTracer.SeedType.Resolution = int(metrichash['resolution'])
+    streamTracer.IntegrationDirection = metrichash['integralDirection'] # 'BACKWARD', 'FORWARD' or  'BOTH'
+
+    # To do : Add a default value based on domain size ?
+    streamTracer.MaximumStreamlineLength = float(metrichash['maxStreamLength'])
+
+
+    ##
+    # create a new 'Tube'
+    tube = Tube(Input=streamTracer)
+    tube.Radius = float(metrichash['tubeRadius'])
+    # show data in view
+    tubeDisplay = Show(tube, renderView1)
+    # trace defaults for the display properties.
+    tubeDisplay.Representation = 'Surface'
+    tubeDisplay.ColorArrayName = [None, '']
+    tubeDisplay.EdgeColor = [0.0, 0.0, 0.0]
+    tubeDisplay.DiffuseColor = [0.0, 1.0, 0.0]
+    tubeDisplay.Specular = 0
+    tubeDisplay.Opacity = opacity
+
+    metrichash['field'] = metrichash['colorByField']
+    if 'colorByFieldComponent' in metrichash:
+        metrichash['fieldComponent'] = metrichash['colorByFieldComponent']
+    metrichash = correctfieldcomponent(streamTracer, metrichash)
+    colorMetric(tube, metrichash)
+    try:
+        if metrichash['image'].split("_")[1] == "solo":
+            Hide(data_reader, renderView1)
+    except:
+        pass
+    return streamTracer
+
+
 def createClip(metrichash, data_reader, data_display, isIndivImages):
     camera = GetActiveCamera()
     renderView1 = GetActiveViewOrCreate('RenderView')
@@ -338,6 +398,7 @@ def createLine(metrichash, kpi, data_reader, outputDir="."):
         image = metrichash['image']
     except:
         image = None
+
     point = [x for x in metrichash['position'].split()]
 
     camera = GetActiveCamera()
@@ -443,7 +504,7 @@ def makeAnimation(outputDir, kpi, magnification, deleteFrames=True):
     if not (os.path.exists(animationFramesDir)):
         os.makedirs(animationFramesDir)
 
-    WriteAnimation(animationFramesDir + '/' + "/out_" + kpi + ".png", Magnification=magnification, FrameRate=15.0,
+    WriteAnimation(animationFramesDir + "/out_" + kpi + ".png", Magnification=magnification, FrameRate=15.0,
                    Compression=False)
 
     subprocess.call(["convert", "-delay", "15",  "-loop",  "0", animationFramesDir + "/out_" + kpi + ".*.png",
@@ -451,3 +512,28 @@ def makeAnimation(outputDir, kpi, magnification, deleteFrames=True):
 
     if deleteFrames:
         shutil.rmtree(animationFramesDir)
+
+
+def exportx3d(outputDir,kpi):
+
+    blenderFramesDir = outputDir + '/'+ kpi + '_blender/'
+
+    if not (os.path.exists(blenderFramesDir)):
+        os.makedirs(blenderFramesDir)
+
+    TimeSteps = getTimeSteps()
+
+
+    firstTimeStep = TimeSteps[0]
+
+    renderView1 = GetActiveViewOrCreate('RenderView')
+
+    renderView1.ViewTime = firstTimeStep
+
+    for num, time in enumerate(TimeSteps):
+        name = blenderFramesDir + str(num) + '.x3d'
+        ExportView(name, view=renderView1)
+
+        animationScene1 = GetAnimationScene()
+
+        animationScene1.GoToNext()
