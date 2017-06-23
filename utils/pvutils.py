@@ -316,7 +316,7 @@ def createStreamTracer(metrichash, data_reader, data_display, isIndivImages):
             Hide(data_reader, renderView1)
     except:
         pass
-    return streamTracer
+    return tube
 
 
 def createClip(metrichash, data_reader, data_display, isIndivImages):
@@ -514,7 +514,7 @@ def makeAnimation(outputDir, kpi, magnification, deleteFrames=True):
         shutil.rmtree(animationFramesDir)
 
 
-def exportx3d(outputDir,kpi):
+def exportx3d(outputDir,kpi, metricObj, dataReader):
 
     blenderFramesDir = outputDir + '/'+ kpi + '_blender/'
 
@@ -531,8 +531,17 @@ def exportx3d(outputDir,kpi):
     renderView1.ViewTime = firstTimeStep
 
     for num, time in enumerate(TimeSteps):
-        name = blenderFramesDir + str(num) + '.x3d'
-        ExportView(name, view=renderView1)
+        #name = blenderFramesDir + str(num) + '.x3d'
+        name_body = blenderFramesDir + str(num) + '_body.x3d'
+        name_solo = blenderFramesDir + str(num) + '_solo.x3d'
+
+        Show(metricObj, renderView1)
+        Hide(dataReader, renderView1)
+        ExportView(name_solo, view=renderView1)
+
+        Show(dataReader, renderView1)
+        Hide(metricObj, renderView1)
+        ExportView(name_body, view=renderView1)
 
         animationScene1 = GetAnimationScene()
 

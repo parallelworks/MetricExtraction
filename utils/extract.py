@@ -126,7 +126,7 @@ for kpi in kpihash:
     else:
         export2Blender = False
     if export2Blender:
-        pvutils.exportx3d(outputDir, kpi)
+        pvutils.exportx3d(outputDir, kpi, d, dataReader)
 
 
 fp_csv_metrics.close()
