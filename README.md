@@ -23,6 +23,14 @@ Syntax for extracting various metric types are described below:
 -   **Line**:
     -   position="x1 y1 z1 x2 y2 z2" specifies the coordinates of the start point (x1, y1, z1) and end point (x2, y2, z2) of the line segment. If "center" is specified in any position, auto calculates focal point of model.
     -   resolution specifies the number of points/resolution.
+    -   **Note** : To plot the line using the "plot" option (see notes below under image or animation) relies on `matplotlib.pyplot` which depends on `python-dateutil`. Loading `matplotlib.pyplot` in `pvpython` raises an error due to this unresolved dependency. To solve this problem install the `python-dateutil` module in the Python `site-packages` directory of Python2.7 that comes with Python.
+
+        ``` example
+        pip2 install --target=/ParaviewDirectory/ParaView-5.3.0-Qt5-OpenGL2-MPI-Linux-64bit/lib/python2.7/site-packages python-dateutil 
+        ```
+
+        This step is not needed if instead of `pvpython` you are running the `extract.py` script using `python2` and setting `PYTHONPATH` to point to where `paraview.simple` modules are.
+
 -   **Clip**: clip through domain with a plane
     -   plane="x","y" or "z" specifies the direction of the clip plane (normal to the "x","y" or "z" axis)
     -   position="x y z" the coordinate of a point on the clip plane
@@ -43,7 +51,7 @@ Syntax for extracting various metric types are described below:
 
 If an image is desired, define parameters below:
 
--   **image**: iso, top, bottom, left, right, front, back - Line type can specify "plot" type to plot the line
+-   **image**: iso, top, bottom, left, right, front, back - Line type can specify "plot" type to plot the line.
 -   **min**: data range min
 -   **max**: data range max
 -   **colorscale**: color data by (<https://www.paraview.org/Wiki/Colormaps>)
@@ -55,7 +63,7 @@ If an image is desired, define parameters below:
 If animation is desired, define parameters below:
 
 -   **animation**: "true"
--   **image**: iso, top, bottom, left, right, front, back - Line type can specify "plot" type to plot the line
+-   **image**: iso, top, bottom, left, right, front, back - Line type can specify "plot" type to plot the line.
 -   **min**: data range min
 -   **max**: data range max
 -   **colorscale**: color data by Paraview built in color maps (<https://www.paraview.org/Wiki/Colormaps>)
