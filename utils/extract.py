@@ -5,7 +5,7 @@ import pvutils
 import data_IO
 import os
 
-
+print(sys.argv)
 if len(sys.argv) < 5:
     print("Number of provided arguments: ", len(sys.argv) - 1)
     print("Usage: pvpython extract.py  <dataFile>  <desiredMetrics.json> <outputDir> <outputMetrics.csv>")

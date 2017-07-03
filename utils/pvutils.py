@@ -5,6 +5,12 @@ import os
 import subprocess
 import shutil
 
+# For saving plots as pngs
+import matplotlib
+
+import numpy as np
+import warnings
+
 def byteify(input):
     """
     Got this function from https://stackoverflow.com/questions/2357230/what-is-the-proper-way-to-comment-functions-in-python
@@ -22,6 +28,14 @@ def byteify(input):
         return input.encode('utf-8')
     else:
         return input
+
+
+def getParaviewVersion():
+    """ Return paraview version as a double number: e.g. 5.4"""
+    PVversionMajor = paraview.servermanager.vtkSMProxyManager.GetVersionMajor() 
+    PVversionMinor = paraview.servermanager.vtkSMProxyManager.GetVersionMinor()
+    PVversion = PVversionMajor + PVversionMinor/100.0
+    return PVversion
 
 
 def planeNormalFromName(planeName):
@@ -229,16 +243,23 @@ def colorMetric(d, metrichash):
     GetScalarBar(ctf).LabelColor = [0,0,0]
     GetScalarBar(ctf).Orientation = "Horizontal"
     
-    # center
     imgtype=metrichash['image'].split("_")[0]
+    PVversion = getParaviewVersion()
     if (imgtype!="iso"):
-        GetScalarBar(ctf).Position = [0.25,0.05]
-        GetScalarBar(ctf).Position2 = [0.5,0]
+        # center
+        if PVversion < 5.04:
+            GetScalarBar(ctf).Position = [0.25,0.05]
+            GetScalarBar(ctf).Position2 = [0.5,0] # no such property in PV 5.04
+        else:
+            GetScalarBar(ctf).WindowLocation = 'LowerCenter'
     else:
         # left
-        GetScalarBar(ctf).Position = [0.05,0.025]
-        GetScalarBar(ctf).Position2 = [0.4,0]
-    
+        if PVversion < 5.04:
+            GetScalarBar(ctf).Position = [0.05,0.025]
+            GetScalarBar(ctf).Position2 = [0.4,0] # no such property in PV 5.04
+        else:
+            GetScalarBar(ctf).WindowLocation = 'LowerLeftCorner'
+
     #if individualImages == False:
     #    display.SetScalarBarVisibility(renderView1, False)
 
@@ -251,6 +272,7 @@ def createSlice(metrichash, dataReader, dataDisplay, isIndivImgs):
     bodyopacity=float(metrichash['bodyopacity'])
     if isIndivImgs:
         dataDisplay.Opacity = bodyopacity
+        dataDisplay.ColorArrayName = ['POINTS', '']
     slicetype = "Plane"
     plane = metrichash['plane']
 
@@ -276,6 +298,7 @@ def createStreamTracer(metrichash, data_reader, data_display, isIndivImages):
     bodyopacity = float(metrichash['bodyopacity'])
     if isIndivImages == True:
         data_display.Opacity = bodyopacity
+        data_display.ColorArrayName = ['POINTS', '']
 
     streamTracer = StreamTracer(Input=data_reader,
                                  SeedType='High Resolution Line Source')
@@ -327,6 +350,7 @@ def createClip(metrichash, data_reader, data_display, isIndivImages):
     bodyopacity = float(metrichash['bodyopacity'])
     if isIndivImages == True:
         data_display.Opacity = bodyopacity
+        data_display.ColorArrayName = ['POINTS', '']
     cliptype = "Plane"
     plane = metrichash['plane']
     if 'invert' in metrichash.keys():
@@ -392,6 +416,30 @@ def createVolume(metrichash, data_reader):
     return c
 
 
+def plotLine(infile):
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    warnings.filterwarnings('ignore')
+
+    header = np.genfromtxt(infile, delimiter=',', names=True).dtype.names
+    data = np.genfromtxt(infile, delimiter=',', skip_header=1)
+
+    x = data[:, 0]
+    y = data[:, 1]
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(x, y)
+
+    locs, labels = plt.yticks()
+    plt.yticks(locs, map(lambda x: "%g" % x, locs))
+
+    plt.xlabel('Point')
+    plt.ylabel(header[1])
+    plt.title(infile.replace(".csv", "").replace("plot_", "") + ' Plot')
+    plt.grid(True)
+    plt.savefig(infile.replace(".csv", "") + ".png")
+
+
 def createLine(metrichash, kpi, data_reader, outputDir="."):
     resolution = int(metrichash['resolution'])
     try:
@@ -438,8 +486,15 @@ def createLine(metrichash, kpi, data_reader, outputDir="."):
     kpifld = metrichash['field']
     kpiComp = metrichash['fieldComponent']
     if (image == "plot"):
-        f=open(outputDir+"/plot_"+kpi+".csv","w")
-        f.write(",".join(["point", kpifld + "_" + kpiComp])+"\n")
+        if not (os.path.exists(outputDir)):
+            os.makedirs(outputDir)
+        csvFileName = outputDir + "/plot_" + kpi + ".csv"
+        f=open(csvFileName,"w")
+        f.write("point,"+kpifld)
+        if kpiComp:
+            f.write("_" + kpiComp)
+        f.write("\n")
+
     METRIC_INDEX=0
     for a in range(0,pl.GetPointData().GetNumberOfArrays()):
         if kpifld == pl.GetPointData().GetArrayName(a):
@@ -456,6 +511,7 @@ def createLine(metrichash, kpi, data_reader, outputDir="."):
             f.write(",".join([str(t), str(dataPoint)])+"\n")
     if image == "plot":
         f.close()
+        plotLine(csvFileName)
     ave=sum/pl.GetPointData().GetArray(METRIC_INDEX).GetNumberOfTuples()
     return l, ave
 

@@ -6,6 +6,18 @@ def xstr(s):
     return '' if s is None else str(s)
 
 
+def removeLeadSpacesFromStrList(strList):
+    for iLine, line in enumerate(strList):
+        strList[iLine] = strList[iLine].lstrip()
+    return strList
+
+
+def removeTrailingCharFromStrList(strList, char2strip):
+    for iLine, line in enumerate(strList):
+        strList[iLine] = strList[iLine].rstrip().rstrip(char2strip) + '\n'
+    return strList
+
+
 def textStartsWithExactMath(text, flag_str, delimiter):
     if delimiter is None:
         delimiter = '\\b'
@@ -81,6 +93,35 @@ def read_int_from_file_pointer(file_pointer, flag_str, delimiter=None,
     return data
 
 
+def read_int_from_strList(strList, flag_str, delimiter=None, startIndexInLine=0,
+                          startLine=0):
+    data = []
+    for line in strList[startLine:]:
+        if textStartsWithExactMath(line, flag_str, delimiter):
+            line = line[len(flag_str + xstr(delimiter)):]  # Remove flag from the beginning of line
+            data = int(line.split(delimiter)[startIndexInLine])
+            break
+    if not isinstance(data, int):
+        print("Error: cannot read ", flag_str, " from input file")
+        sys.exit(1)
+    return data
+
+
+def read_str_from_strList(strList, flag_str, delimiter=None,
+                          startIndex=0, index2start=0):
+    data = []
+    for line in strList[index2start:]:
+        if textStartsWithExactMath(line, flag_str, delimiter):
+            line = line[len(flag_str + xstr(delimiter)):]  # Remove flag from the beginning of line
+            data = line.split(delimiter)[startIndex]
+            data = data.rstrip()
+            break
+    if not isinstance(data, str):
+        print("Error: cannot read ", flag_str, " from input file")
+        sys.exit(1)
+    return data
+
+
 def open_file(file_name, open_mode="r"):
     if open_mode == "w":
         if not os.path.exists(os.path.dirname(file_name)):
@@ -89,7 +130,7 @@ def open_file(file_name, open_mode="r"):
         file_pointer = open(file_name, open_mode)
         return file_pointer
     except IOError:
-        print("Error: cannot open input file", file_name)
+        print("Error: cannot open file", file_name)
         sys.exit(1)
 
 
