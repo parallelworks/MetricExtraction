@@ -5,6 +5,7 @@ import os
 import subprocess
 import shutil
 
+
 # For saving plots as pngs
 import matplotlib
 
@@ -572,7 +573,7 @@ def makeAnimation(outputDir, kpi, magnification, deleteFrames=True):
 
 def exportx3d(outputDir,kpi, metricObj, dataReader):
 
-    blenderFramesDir = outputDir + '/'+ kpi + '_blender/'
+    blenderFramesDir = outputDir + kpi + '_blender'
 
     if not (os.path.exists(blenderFramesDir)):
         os.makedirs(blenderFramesDir)
@@ -588,8 +589,8 @@ def exportx3d(outputDir,kpi, metricObj, dataReader):
 
     for num, time in enumerate(TimeSteps):
         #name = blenderFramesDir + str(num) + '.x3d'
-        name_body = blenderFramesDir + str(num) + '_body.x3d'
-        name_solo = blenderFramesDir + str(num) + '_solo.x3d'
+        name_body = blenderFramesDir + '/' + str(num) + '_body.x3d'
+        name_solo = blenderFramesDir + '/' + str(num) + '_solo.x3d'
 
         Show(metricObj, renderView1)
         Hide(dataReader, renderView1)
@@ -602,3 +603,7 @@ def exportx3d(outputDir,kpi, metricObj, dataReader):
         animationScene1 = GetAnimationScene()
 
         animationScene1.GoToNext()
+
+    # tar the directory
+    data_IO.tarDirectory(blenderFramesDir + ".tar", blenderFramesDir)
+    shutil.rmtree(blenderFramesDir)
