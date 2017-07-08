@@ -177,6 +177,10 @@ def getTimeSteps():
     # update animation scene based on data timesteps
     animationScene1.UpdateAnimationUsingDataTimeSteps()
 
+    timeSteps = []
+    if type(animationScene1.TimeKeeper.TimestepValues)== int or type(animationScene1.TimeKeeper.TimestepValues)== float:
+        timeSteps.append(animationScene1.TimeKeeper.TimestepValues)       
+    else:
     timeSteps = list(animationScene1.TimeKeeper.TimestepValues)
 
     return timeSteps
