@@ -4,17 +4,28 @@
         "invertcolor": "0", 
         "min": "0", 
         "max": "5", 
-        "image": "top", 
+        "image": "customize", 
         "colorscale": "Blue to Red Rainbow", 
         "field": "U", 
         "fieldComponent": "X", 		
         "discretecolors": "20", 
         "bodyopacity": "0.3", 
-        "position": "10.0  center center", 
+        "position": "30.0  center center", 
         "type": "Clip",
 		"plane": "X",
-		"invert": "true",
-		"animation": "false"
+		"invert": "false",
+		"animation": "false",
+		"barTitle":"$V_x$ (m/s)",
+		"ComponentTitle":"",
+		"FontColor":"0.2 0.2 .2",
+		"FontSize":"15",
+		"LabelFormat":"%4.3g",
+		"CameraPosition":"10 -27 121",
+		"CameraFocalPoint":"45 33 -4",
+		"CameraParallelScale": "28.2",
+		"CameraViewUp":"-0.0765 0.897 -0.43",
+		"CameraParallelScale":"28.16814634170169",
+		"CameraParallelProjection": "0"
     },
     "ClipUy": {
         "opacity": "1", 
@@ -53,6 +64,6 @@
         "type": "StreamLines",
 		"animation": "false",
 		"blender": "true",
-		"extractStats":"false"		
+		"extractStats":"false"
     }
 }

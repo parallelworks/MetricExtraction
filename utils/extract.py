@@ -67,7 +67,7 @@ for kpi in kpihash:
         HideAll()
         Show(dataReader, renderView1)
         if kpiimage != "None" and kpiimage != "" and kpiimage != "plot":
-            pvutils.adjustCamera(kpiimage, renderView1)
+            pvutils.adjustCamera(kpiimage, renderView1, metrichash)
     print(kpi)
     if kpitype=="Slice":
         d = pvutils.createSlice(metrichash, dataReader, readerDisplay, individualImages)

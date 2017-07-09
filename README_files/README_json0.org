@@ -78,29 +78,37 @@ Syntax for extracting various metric types are described below:
   - maxStreamLength: The maximum length of streamlines. 
 
 If an image is desired, define parameters below:
--  *image*: iso, top, bottom, left, right, front, back - Line type can
-   specify "plot" type to plot the line. 
--  *min*: data range min
--  *max*: data range max
--  *colorscale*: color data by ([[https://www.paraview.org/Wiki/Colormaps]])
--  *invertcolor*: invert the color scale - Yes=1, No=0
--  *discretecolors*: discretize the colored data by X number of values
--  *opacity*: opacity of the metric on the image
--  *bodyopacity*: opacity of the base domain (can be used to hide
-   domain)
-
-If animation is desired, define parameters below:
-- *animation*: "true"
 - *image*: iso, top, bottom, left, right, front, back - Line type can
   specify "plot" type to plot the line. 
+ To set a view to a customized view set image to "customize" and provide the following 
+ properties (see =sample_inputs/elbowKPI.json= for an example)
+  + *CameraPosition* = "x y z"  
+  + *CameraFocalPoint* = "x y z"
+  + *CameraViewUp* = "v1 v2 v3" 
+  + *CameraParallelScale* = scale value (double number)   
+  + *CameraParallelProjection* = 1 or 0
+  You can find the above camera properties for your desired view from the "Adjust Camera" window in Paraview, or via starting a trace.   
 - *min*: data range min
 - *max*: data range max
-- *colorscale*: color data by Paraview built in color maps ([[https://www.paraview.org/Wiki/Colormaps]])
+- *colorscale*: color data by ([[https://www.paraview.org/Wiki/Colormaps]])
 - *invertcolor*: invert the color scale - Yes=1, No=0
 - *discretecolors*: discretize the colored data by X number of values
 - *opacity*: opacity of the metric on the image
 - *bodyopacity*: opacity of the base domain (can be used to hide
   domain)
+- The following parameters for specifying color bar properties are optional and 
+  overwrite the default Paraview settings if set (see =sample_inputs/elbowKPI.json= for an example):
+  + *barTitle* color bar title (\LaTeX expressions can also be specified)
+  + *ComponentTitle*
+  + *FontColor* rgb color values. For example for white color specify set to "1 1 1"
+  + *FontSize*
+  + *LabelFormat* format for displaying the color bar numbers, e.g. "%4.3g" 
+
+If animation is desired, define parameters below:
+- *animation*: "true" 
+- *image*, *min*, *max*, *colorscale*, *invertcolor*, *discretecolors*, *opacity*, *bodyopacity* and 
+  the parameters for specifying color bar properties are the same as parameters in the image section
+  described above. 
 
 If blender (.x3d) output is desired, add the parameter *blender* and set it to "true". 
 

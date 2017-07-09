@@ -124,6 +124,12 @@ def read_str_from_strList(strList, flag_str, delimiter=None,
     return data
 
 
+def read_floats_from_string(str2read, delimiter=None):
+    strList = str2read.split(delimiter)
+    floatList = [float(i) for i in strList]
+    return floatList
+
+
 def open_file(file_name, open_mode="r"):
     if open_mode == "w":
         if not os.path.exists(os.path.dirname(file_name)):

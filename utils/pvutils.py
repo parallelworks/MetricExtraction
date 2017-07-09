@@ -181,7 +181,7 @@ def getTimeSteps():
     if type(animationScene1.TimeKeeper.TimestepValues)== int or type(animationScene1.TimeKeeper.TimestepValues)== float:
         timeSteps.append(animationScene1.TimeKeeper.TimestepValues)       
     else:
-    timeSteps = list(animationScene1.TimeKeeper.TimestepValues)
+        timeSteps = list(animationScene1.TimeKeeper.TimestepValues)
 
     return timeSteps
 
@@ -216,7 +216,6 @@ def initRenderView (dataReader, viewSize, backgroundColor):
     return renderView1, readerDisplay
 
 
-
 def colorMetric(d, metrichash):
     display = GetDisplayProperties(d)
 
@@ -244,26 +243,46 @@ def colorMetric(d, metrichash):
         ctf.NumberOfTableValues = int(metrichash["discretecolors"])
     else:
         ctf.Discretize = 0
-    GetScalarBar(ctf).TitleColor = [0,0,0]
-    GetScalarBar(ctf).LabelColor = [0,0,0]
-    GetScalarBar(ctf).Orientation = "Horizontal"
-    
+
+    renderView1 = GetActiveViewOrCreate('RenderView')
+    ctfColorBar = GetScalarBar(ctf, renderView1)
+
+    ctfColorBar.Orientation = "Horizontal"
+
+    # Properties modified on uLUTColorBar
+    if 'barTitle' in metrichash:
+        ctfColorBar.Title = metrichash["barTitle"]
+    if 'ComponentTitle' in metrichash:
+        ctfColorBar.ComponentTitle = metrichash["ComponentTitle"]
+    if 'FontColor' in metrichash:
+        ctfColorBar.TitleColor = data_IO.read_floats_from_string(metrichash["FontColor"])
+        ctfColorBar.LabelColor = data_IO.read_floats_from_string(metrichash["FontColor"])
+    else:
+        ctfColorBar.TitleColor = [0, 0, 0]
+        ctfColorBar.LabelColor = [0, 0, 0]
+    if 'FontSize' in metrichash:
+        ctfColorBar.TitleFontSize = int(metrichash["FontSize"])
+        ctfColorBar.LabelFontSize = int(metrichash["FontSize"])
+    if 'LabelFormat' in metrichash:
+        ctfColorBar.LabelFormat = metrichash["LabelFormat"]
+        ctfColorBar.RangeLabelFormat = metrichash["LabelFormat"]
+
     imgtype=metrichash['image'].split("_")[0]
     PVversion = getParaviewVersion()
     if (imgtype!="iso"):
         # center
         if PVversion < 5.04:
-            GetScalarBar(ctf).Position = [0.25,0.05]
-            GetScalarBar(ctf).Position2 = [0.5,0] # no such property in PV 5.04
+            ctfColorBar.Position = [0.25,0.05]
+            ctfColorBar.Position2 = [0.5,0] # no such property in PV 5.04
         else:
-            GetScalarBar(ctf).WindowLocation = 'LowerCenter'
+            ctfColorBar.WindowLocation = 'LowerCenter'
     else:
         # left
         if PVversion < 5.04:
-            GetScalarBar(ctf).Position = [0.05,0.025]
-            GetScalarBar(ctf).Position2 = [0.4,0] # no such property in PV 5.04
+            ctfColorBar.Position = [0.05,0.025]
+            ctfColorBar.Position2 = [0.4,0] # no such property in PV 5.04
         else:
-            GetScalarBar(ctf).WindowLocation = 'LowerLeftCorner'
+            ctfColorBar.WindowLocation = 'LowerLeftCorner'
 
     #if individualImages == False:
     #    display.SetScalarBarVisibility(renderView1, False)
@@ -521,7 +540,7 @@ def createLine(metrichash, kpi, data_reader, outputDir="."):
     return l, ave
 
 
-def adjustCamera(view, renderView1):
+def adjustCamera(view, renderView1, metrichash):
     camera=GetActiveCamera()
     if view == "iso":
         camera.SetFocalPoint(0, 0, 0)
@@ -552,12 +571,18 @@ def adjustCamera(view, renderView1):
         camera.SetFocalPoint(0,0,0)
         camera.SetPosition(0,0,1)
         renderView1.ResetCamera()
-#        camera.Roll(90)
+        #        camera.Roll(90)
     elif view == "-Z" or view == "-z" or view == "bottom": 
         camera.SetFocalPoint(0,0,0)
         camera.SetPosition(0,0,-1)
         renderView1.ResetCamera()
-#       camera.Roll(-90)
+        #       camera.Roll(-90)
+    elif view == "customize":
+        renderView1.CameraPosition   = data_IO.read_floats_from_string(metrichash["CameraPosition"])
+        renderView1.CameraFocalPoint = data_IO.read_floats_from_string(metrichash["CameraFocalPoint"])
+        renderView1.CameraViewUp = data_IO.read_floats_from_string(metrichash["CameraViewUp"])
+        renderView1.CameraParallelScale = float(metrichash["CameraParallelScale"])
+        renderView1.CameraParallelProjection = int(metrichash["CameraParallelProjection"])
 
 
 def makeAnimation(outputDir, kpi, magnification, deleteFrames=True):
