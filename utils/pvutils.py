@@ -602,11 +602,14 @@ def createLine(metrichash, kpi, data_reader, outputDir="."):
     return l, ave
 
 
-def adjustCamera(view, renderView1, metrichash):
+def adjustCamera(view, renderView1, metrichash,flip):
     camera=GetActiveCamera()
     if view == "iso":
         camera.SetFocalPoint(0, 0, 0)
-        camera.SetPosition(0, -1, 0)
+        if (flip == "true"):
+            camera.SetPosition(0, 1, 0)
+        else:
+            camera.SetPosition(0, -1, 0)
         renderView1.ResetCamera()
         # adjust for scale margin
         camera.SetFocalPoint(camera.GetFocalPoint()[0],camera.GetFocalPoint()[1],camera.GetFocalPoint()[2]-0.25)

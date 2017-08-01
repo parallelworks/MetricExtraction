@@ -62,12 +62,17 @@ for kpi in kpihash:
         kpiimage = metrichash['image']
     else:
         kpiimage = "None"
+        
+    if 'imageflip' in metrichash:
+        kpiimageflip = metrichash['imageflip']
+    else:
+        kpiimageflip = "None"
 
     if individualImages:
         HideAll()
         Show(dataReader, renderView1)
         if kpiimage != "None" and kpiimage != "" and kpiimage != "plot":
-            pvutils.adjustCamera(kpiimage, renderView1, metrichash)
+            pvutils.adjustCamera(kpiimage, renderView1, metrichash, kpiimageflip)
     print(kpi)
 
     ave=[]
