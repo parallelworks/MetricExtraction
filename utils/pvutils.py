@@ -117,6 +117,68 @@ def getdatarange(datasource, kpifld, kpifldcomp):
     return datarange
 
 
+def extractStatsOld(d, kpi, kpifield, kpiComp, kpitype, fp_csv_metrics, ave=[]):
+    datarange = getdatarange(d, kpifield, kpiComp)
+    if kpitype == "Probe":
+        average=(datarange[0]+datarange[1])/2
+    elif kpitype == "Line":
+        average=ave
+    elif kpitype == "Slice":
+        # get kpi field value and area - average = value/area
+        integrateVariables = IntegrateVariables(Input=d)
+        average = getdatarange(integrateVariables, kpifield, kpiComp)[0]\
+                 / integrateVariables.CellData['Area'].GetRange()[0]
+    elif kpitype == "Volume" or kpitype == "Clip":
+        integrateVariables = IntegrateVariables(Input=d)
+        average = getdatarange(integrateVariables, kpifield, kpiComp)[0]\
+                  / integrateVariables.CellData['Volume'].GetRange()[0]
+
+    fp_csv_metrics.write(",".join([kpi, str(average), str(datarange[0]),str(datarange[1])]) + "\n")
+
+
+def extractStats(dataSource, kpi, kpifield, kpiComp, kpitype, fp_csv_metrics):
+    # If kpifield is a vector, add a calculater on top and extract the component of the vector
+    # as a scalar
+    arrayInfo = dataSource.PointData[kpifield]
+    if isfldScalar(arrayInfo):
+        statVarName = kpifield
+    else:
+        # create a new 'Calculator'
+        statVarName = kpifield + '_' + kpiComp
+        calc1 = Calculator(Input=dataSource)
+        calc1.ResultArrayName = statVarName
+        if kpiComp == 'Magnitude':
+            calc1.Function = 'mag('+kpifield+')'
+        else:
+            calc1.Function = calc1.ResultArrayName
+        UpdatePipeline()
+        dataSource = calc1
+
+    # create a new 'Descriptive Statistics'
+    dStats = DescriptiveStatistics(Input=dataSource, ModelInput=None)
+    print(statVarName)
+    dStats.VariablesofInterest = [statVarName]
+    UpdatePipeline()
+
+    dStatsDataInfo = dStats.GetDataInformation()
+    dStatsStatsInfo = dStatsDataInfo.GetRowDataInformation()
+    numStats = dStatsDataInfo.GetRowDataInformation().GetNumberOfArrays()
+
+    for iStat in range(numStats):
+        statName = dStatsStatsInfo.GetArrayInformation(iStat).GetName()
+        statValue = dStatsStatsInfo.GetArrayInformation(iStat).GetComponentRange(0)[0]
+        if  statName == 'Maximum':
+            maxaximum = statValue
+        elif statName == 'Minimum' :
+            minimum = statValue
+        elif statName == 'Mean':
+            average = statValue
+        elif statName == 'Standard Deviation':
+            stanDev = statValue
+
+    fp_csv_metrics.write(",".join([kpi, str(average), str(minimum), str(maxaximum), str(stanDev)]) + "\n")
+
+
 def correctfieldcomponent(datasource, metrichash):
     """
     Set "fieldComponent" to "Magnitude" if the component of vector/tensor fields is not given. For scalar fields set 
@@ -578,6 +640,7 @@ def adjustCamera(view, renderView1, metrichash):
         renderView1.ResetCamera()
         #       camera.Roll(-90)
     elif view == "customize":
+        renderView1.InteractionMode = '3D'
         renderView1.CameraPosition   = data_IO.read_floats_from_string(metrichash["CameraPosition"])
         renderView1.CameraFocalPoint = data_IO.read_floats_from_string(metrichash["CameraFocalPoint"])
         renderView1.CameraViewUp = data_IO.read_floats_from_string(metrichash["CameraViewUp"])

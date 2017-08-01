@@ -49,7 +49,7 @@ for kpi in kpihash:
     kpihash[kpi] = pvutils.correctfieldcomponent(dataReader, kpihash[kpi])
 
 fp_csv_metrics = data_IO.open_file(metricFile, "w")
-fp_csv_metrics.write(",".join(['metric','ave','min','max'])+"\n")
+fp_csv_metrics.write(",".join(['metric','ave','min','max','sd'])+"\n")
 
 renderView1.InteractionMode = '2D'
 for kpi in kpihash:
@@ -69,6 +69,8 @@ for kpi in kpihash:
         if kpiimage != "None" and kpiimage != "" and kpiimage != "plot":
             pvutils.adjustCamera(kpiimage, renderView1, metrichash)
     print(kpi)
+
+    ave=[]
     if kpitype=="Slice":
         d = pvutils.createSlice(metrichash, dataReader, readerDisplay, individualImages)
     elif kpitype== "Clip":
@@ -79,7 +81,7 @@ for kpi in kpihash:
         d,ave = pvutils.createLine(metrichash, kpi, dataReader, outputDir)
     elif kpitype== "StreamLines":
         d = pvutils.createStreamTracer(metrichash, dataReader, readerDisplay, individualImages)
-        metrichash['extractStats'] = "False"
+        #metrichash['extractStats'] = "False"
     elif kpitype== "Volume":
         d = pvutils.createVolume(metrichash, dataReader)
 
@@ -90,23 +92,8 @@ for kpi in kpihash:
         extractStats = True
 
     if extractStats:
-        datarange = pvutils.getdatarange(d, kpifield, kpiComp)
-        if kpitype == "Probe":
-            average=(datarange[0]+datarange[1])/2
-        elif kpitype == "Line":
-            average=ave
-        elif kpitype == "Slice":
-            # get kpi field value and area - average = value/area
-            integrateVariables = IntegrateVariables(Input=d)
-            average= pvutils.getdatarange(integrateVariables, kpifield, kpiComp)[0]\
-                     / integrateVariables.CellData['Area'].GetRange()[0]
-        elif kpitype == "Volume" or kpitype == "Clip":
-            integrateVariables = IntegrateVariables(Input=d)
-            average= pvutils.getdatarange(integrateVariables, kpifield, kpiComp)[0]\
-                     / integrateVariables.CellData['Volume'].GetRange()[0]
-
-        fp_csv_metrics.write(",".join([kpi,str(average),str(datarange[0]),str(datarange[1])])
-                             +"\n")
+        #pvutils.extractStatsOld(d, kpi, kpifield, kpiComp, kpitype, fp_csv_metrics, ave)
+        pvutils.extractStats(d, kpi, kpifield, kpiComp, kpitype, fp_csv_metrics)
 
     if individualImages:
         if kpiimage != "None" and kpiimage != "" and kpiimage != "plot":

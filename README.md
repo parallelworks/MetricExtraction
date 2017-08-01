@@ -13,7 +13,7 @@ The below parameters need to be specified for each of the desired metrics:
 -   **fieldComponent**: For vector/tensor quantities specify the desired component as fieldComponent. If `fieldComponent` is not given for vector/tensor quantities, the magnitude of the desired quantity will be extracted, i.e., the default is "fieldComponent": "Magnitude"
 -   **type**: specifies the type of metric. The types are "Clip", "Line", "Probe", "Slice", "Volume" and "StreamLines". Additional fields for each metric type are listed below.
 -   **position**: see below type definition for position description
--   **extractStats**: Set to "false" if quantitative metrics to the csv file (ave,min,max) is not needed (default: "true"). Note that metrics are not extracted for streamlines.
+-   **extractStats**: Set to "false" if quantitative metrics to the csv file (ave,min,max,sd) is not needed (default: "true").
 
 Syntax for extracting various metric types are described below:
 
@@ -40,7 +40,7 @@ Syntax for extracting various metric types are described below:
     -   position="x y z" the coordinate of a point on the clip plane
 -   **Volume**: box in domain
     -   position="xmin xmax ymin ymax zmin zmax"
--   **StreamLines**: Note that metrics are not extracted for streamlines.
+-   **StreamLines**:
     -   position="x1 y1 z1 x2 y2 z2" specifies the coordinates of the start point (x1, y1, z1) and end point (x2, y2, z2) of the line segment for seeding Stream lines. If "center" is specified in any position, auto calculates focal point of model.
     -   resolution specifies the number of seeds generated on the line.
     -   colorByField: domain field to use for coloring the streamlines. The "Vorticity" vector is also available.
@@ -51,7 +51,7 @@ Syntax for extracting various metric types are described below:
 
 If an image is desired, define parameters below:
 
--   **image**: iso, top, bottom, left, right, front, back - Line type can specify "plot" type to plot the line. To set a view to a customized view set image to "customize" and provide the following properties (see `sample_inputs/elbowKPI.json` for an example)
+-   **image**: iso, top (or "+z"), bottom (or "+z"), left (or "-y"), right (or "+y"), front (or "+x"), back (or "-x") - Line type can specify "plot" type to plot the line. To set a view to a customized view set image to "customize" and provide the following properties (see `sample_inputs/elbowKPI.json` for an example)
     -   **CameraPosition** = "x y z"
     -   **CameraFocalPoint** = "x y z"
     -   **CameraViewUp** = "v1 v2 v3"
@@ -80,7 +80,7 @@ If animation is desired, define parameters below:
 
 If blender (.x3d) output is desired, add the parameter **blender** and set it to "true".
 
-Example input file:
+Example input file (also see `sample_inputs/elbowKPI_test.json`):
 
 ``` example
 {
