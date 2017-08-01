@@ -1,0 +1,44 @@
+{
+    "stl": {
+        "image": "iso", 
+        "imageflip": "true", 
+        "bodyopacity": "0.2", 
+        "type": "Image",
+        "field": "STLSolidLabeling"
+    },
+    "ClipUMag": {
+        "opacity": "1", 
+        "invertcolor": "0", 
+        "min": "0", 
+        "max": "5", 
+        "image": "iso", 
+        "imageflip": "true", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "U", 
+        "fieldComponent": "Magnitude", 		
+        "discretecolors": "20", 
+        "bodyopacity": "0.2", 
+        "position": "10.0  center center", 
+        "type": "Clip",
+		"plane": "X",
+		"invert": "false",
+		"animation": "false"
+    },
+    "SliceT": {
+        "opacity": "1", 
+        "invertcolor": "1", 
+        "min": "285", 
+        "max": "300", 
+        "image": "top", 
+        "imageflip": "false", 
+        "colorscale": "Warm to Cool (Extended)", 
+        "field": "T", 
+        "discretecolors": "10",
+        "bodyopacity": "0", 
+        "position": "center center 2.5", 
+        "type": "Slice",
+		"plane": "Z",
+		"invert": "false",
+		"animation": "false"
+    }
+}
