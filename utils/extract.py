@@ -52,11 +52,24 @@ fp_csv_metrics = data_IO.open_file(metricFile, "w")
 fp_csv_metrics.write(",".join(['metric','ave','min','max','sd'])+"\n")
 
 renderView1.InteractionMode = '2D'
+
+# Save the default STL file
+# pvutils.saveSTLfile(renderView1,outputDir + "/out_stl.png",magnification,100)
+
 for kpi in kpihash:
+    
     metrichash = kpihash[kpi]
     kpitype = metrichash['type']
-    kpifield = metrichash['field']
-    kpiComp = metrichash['fieldComponent']
+    
+    if 'field' in metrichash:
+        kpifield = metrichash['field']
+    else:
+        kpifield = "None"
+        
+    if 'fieldComponent' in metrichash:
+        kpiComp = metrichash['fieldComponent']
+    else:
+        kpiComp = "None"
 
     if 'image' in metrichash:
         kpiimage = metrichash['image']
@@ -73,7 +86,13 @@ for kpi in kpihash:
         Show(dataReader, renderView1)
         if kpiimage != "None" and kpiimage != "" and kpiimage != "plot":
             pvutils.adjustCamera(kpiimage, renderView1, metrichash, kpiimageflip)
+    
     print(kpi)
+    
+    if 'extractStats' in metrichash:
+        extractStats = data_IO.str2bool(metrichash['extractStats'])
+    else:
+        extractStats = True
 
     ave=[]
     if kpitype=="Slice":
@@ -89,12 +108,9 @@ for kpi in kpihash:
         #metrichash['extractStats'] = "False"
     elif kpitype== "Volume":
         d = pvutils.createVolume(metrichash, dataReader)
-
-
-    if 'extractStats' in metrichash:
-        extractStats = data_IO.str2bool(metrichash['extractStats'])
-    else:
-        extractStats = True
+    elif kpitype== "Image":
+        d = pvutils.createImage(metrichash, dataReader, readerDisplay, individualImages)
+        extractStats = False
 
     if extractStats:
         #pvutils.extractStatsOld(d, kpi, kpifield, kpiComp, kpitype, fp_csv_metrics, ave)
@@ -122,5 +138,3 @@ for kpi in kpihash:
 
 
 fp_csv_metrics.close()
-
-SaveScreenshot(outputDir + "/out_stl.png", magnification=magnification, quality=100)

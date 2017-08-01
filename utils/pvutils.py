@@ -76,7 +76,10 @@ def read_csv(f):
 def getfieldsfromkpihash(kpihash):
     cellsarrays = []
     for kpi in kpihash:
-        cellsarrays.append(kpihash[kpi]['field'])
+        try:
+            cellsarrays.append(kpihash[kpi]['field'])
+        except:
+            pass
 
     ca = set(cellsarrays)
 
@@ -85,7 +88,10 @@ def getfieldsfromkpihash(kpihash):
 
 
 def isfldScalar(arrayInfo):
-    numComps = arrayInfo.GetNumberOfComponents()
+    try:
+        numComps = arrayInfo.GetNumberOfComponents()
+    except:
+        numComps = 1
     if numComps == 1:
         return True
     else:
@@ -288,23 +294,32 @@ def colorMetric(d, metrichash):
     Render()
     UpdateScalarBars()
     ctf = GetColorTransferFunction(kpifld)
-    ctf.ApplyPreset(metrichash["colorscale"], True)
-    if metrichash["invertcolor"] == "1":
-        ctf.InvertTransferFunction()
-    datarange = getdatarange(d, kpifld, kpifldcomp)
-
-    min = datarange[0]
-    max = datarange[1]
-    if metrichash["min"] != "auto" and metrichash["min"] != "":
-         min = float(metrichash["min"])
-    if metrichash["max"] != "auto" and metrichash["max"] != "":
-         max = float(metrichash["max"])
-    ctf.RescaleTransferFunction(min, max)
-    if int(metrichash["discretecolors"]) > 0:
-        ctf.Discretize = 1
-        ctf.NumberOfTableValues = int(metrichash["discretecolors"])
-    else:
-        ctf.Discretize = 0
+    try:
+        ctf.ApplyPreset(metrichash["colorscale"], True)
+    except:
+        pass
+    try:
+        if metrichash["invertcolor"] == "1":
+            ctf.InvertTransferFunction()
+    except:
+        pass
+    
+    try:
+        datarange = getdatarange(d, kpifld, kpifldcomp)
+        min = datarange[0]
+        max = datarange[1]
+        if metrichash["min"] != "auto" and metrichash["min"] != "":
+             min = float(metrichash["min"])
+        if metrichash["max"] != "auto" and metrichash["max"] != "":
+             max = float(metrichash["max"])
+        ctf.RescaleTransferFunction(min, max)
+        if int(metrichash["discretecolors"]) > 0:
+            ctf.Discretize = 1
+            ctf.NumberOfTableValues = int(metrichash["discretecolors"])
+        else:
+            ctf.Discretize = 0
+    except:
+        pass
 
     renderView1 = GetActiveViewOrCreate('RenderView')
     ctfColorBar = GetScalarBar(ctf, renderView1)
@@ -444,7 +459,6 @@ def createClip(metrichash, data_reader, data_display, isIndivImages):
     else:
         invert = 0
 
-
     s = Clip(Input=data_reader)
     s.ClipType = cliptype
     s.ClipType.Origin = camera.GetFocalPoint()
@@ -501,6 +515,13 @@ def createVolume(metrichash, data_reader):
     cDisplay.Opacity = 0.1
     return c
 
+def createImage(metrichash, dataReader, dataDisplay, isIndivImgs):
+    camera = GetActiveCamera()
+    renderView1 = GetActiveViewOrCreate('RenderView')
+    bodyopacity=float(metrichash['bodyopacity'])
+    if isIndivImgs:
+        dataDisplay.Opacity = bodyopacity
+    return dataDisplay
 
 def plotLine(infile):
     matplotlib.use('Agg')
@@ -602,7 +623,7 @@ def createLine(metrichash, kpi, data_reader, outputDir="."):
     return l, ave
 
 
-def adjustCamera(view, renderView1, metrichash,flip):
+def adjustCamera(view, renderView1, metrichash, flip):
     camera=GetActiveCamera()
     if view == "iso":
         camera.SetFocalPoint(0, 0, 0)
@@ -702,3 +723,8 @@ def exportx3d(outputDir,kpi, metricObj, dataReader):
     # tar the directory
     data_IO.tarDirectory(blenderFramesDir + ".tar", blenderFramesDir)
     shutil.rmtree(blenderFramesDir)
+
+def saveSTLfile(renderView,filename,magnification,quality):
+    adjustCamera("iso", renderView, None, "false")
+    SaveScreenshot(filename, magnification=magnification, quality=quality)
+    
