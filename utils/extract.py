@@ -52,6 +52,7 @@ fp_csv_metrics = data_IO.open_file(metricFile, "w")
 fp_csv_metrics.write(",".join(['metric','ave','min','max','sd'])+"\n")
 
 renderView1.InteractionMode = '2D'
+renderView1.OrientationAxesVisibility = 0
 
 # Save the default STL file
 # pvutils.saveSTLfile(renderView1,outputDir + "/out_stl.png",magnification,100)
@@ -105,12 +106,12 @@ for kpi in kpihash:
         d,ave = pvutils.createLine(metrichash, kpi, dataReader, outputDir)
     elif kpitype== "StreamLines":
         d = pvutils.createStreamTracer(metrichash, dataReader, readerDisplay, individualImages)
-        #metrichash['extractStats'] = "False"
     elif kpitype== "Volume":
         d = pvutils.createVolume(metrichash, dataReader)
-    elif kpitype== "Image":
-        d = pvutils.createImage(metrichash, dataReader, readerDisplay, individualImages)
-        extractStats = False
+    elif kpitype== "Basic":
+        d = pvutils.createBasic(metrichash, dataReader, readerDisplay, individualImages)
+        if kpifield == "None":
+            extractStats = False
 
     if extractStats:
         #pvutils.extractStatsOld(d, kpi, kpifield, kpiComp, kpitype, fp_csv_metrics, ave)

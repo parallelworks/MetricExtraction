@@ -1,10 +1,21 @@
 {
     "stl": {
         "image": "iso", 
-        "imageflip": "true", 
-        "bodyopacity": "0.2", 
-        "type": "Image",
-        "field": "STLSolidLabeling"
+        "imageflip": "false", 
+        "bodyopacity": "0.3", 
+        "type": "Basic"
+    },
+    "viewscore": {
+        "invertcolor": "1", 
+        "min": "0", 
+        "max": "1", 
+        "image": "iso", 
+        "imageflip": "false", 
+        "colorscale": "Greens", 
+        "field": "ViewScore", 
+        "discretecolors": "5", 
+        "bodyopacity": "1", 
+        "type": "Basic"
     },
     "ClipUMag": {
         "opacity": "1", 

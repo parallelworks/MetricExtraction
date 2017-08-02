@@ -145,6 +145,7 @@ def extractStatsOld(d, kpi, kpifield, kpiComp, kpitype, fp_csv_metrics, ave=[]):
 def extractStats(dataSource, kpi, kpifield, kpiComp, kpitype, fp_csv_metrics):
     # If kpifield is a vector, add a calculater on top and extract the component of the vector
     # as a scalar
+    
     arrayInfo = dataSource.PointData[kpifield]
     if isfldScalar(arrayInfo):
         statVarName = kpifield
@@ -162,7 +163,7 @@ def extractStats(dataSource, kpi, kpifield, kpiComp, kpitype, fp_csv_metrics):
 
     # create a new 'Descriptive Statistics'
     dStats = DescriptiveStatistics(Input=dataSource, ModelInput=None)
-    print(statVarName)
+    
     dStats.VariablesofInterest = [statVarName]
     UpdatePipeline()
 
@@ -190,13 +191,16 @@ def correctfieldcomponent(datasource, metrichash):
     Set "fieldComponent" to "Magnitude" if the component of vector/tensor fields is not given. For scalar fields set 
     "fieldComponent" to an empty string.
     """
-    kpifld = metrichash['field']
-    arrayInfo = datasource.PointData[kpifld]
-    if isfldScalar(arrayInfo):
-        metrichash['fieldComponent'] = ''
-    else:
-        if not 'fieldComponent' in metrichash:
-            metrichash['fieldComponent'] = 'Magnitude'
+    try:
+        kpifld = metrichash['field']
+        arrayInfo = datasource.PointData[kpifld]
+        if isfldScalar(arrayInfo):
+            metrichash['fieldComponent'] = ''
+        else:
+            if not 'fieldComponent' in metrichash:
+                metrichash['fieldComponent'] = 'Magnitude'
+    except:
+        kpifld = "None"
     return metrichash
 
 
@@ -213,7 +217,16 @@ def getReaderTypeFromfileAddress(dataFileAddress):
 
 
 def readDataFile(dataFileAddress, dataarray):
-    readerType = getReaderTypeFromfileAddress(dataFileAddress)
+    
+    readerType=None
+    try:
+        readerType = getReaderTypeFromfileAddress(dataFileAddress)
+    except:
+        pass
+    if readerType == None:
+        filename, file_extension = os.path.splitext(dataFileAddress)
+        readerType = file_extension.replace('.','')
+
     if readerType == 'exo':
         # Read the results file : create a new 'ExodusIIReader'
         dataReader = ExodusIIReader(FileName=dataFileAddress)
@@ -234,6 +247,9 @@ def readDataFile(dataFileAddress, dataarray):
         dataReader.MeshRegions = ['internalMesh']
 
         dataReader.CellArrays = dataarray
+
+    elif readerType == 'vtk':
+        dataReader = LegacyVTKReader(FileNames=[dataFileAddress])
 
     return dataReader
 
@@ -269,7 +285,10 @@ def initRenderView (dataReader, viewSize, backgroundColor):
     # get active view
     renderView1 = GetActiveViewOrCreate('RenderView')
 
-    renderView1 = setFrame2latestTime(renderView1)
+    try:
+        renderView1 = setFrame2latestTime(renderView1)
+    except:
+        pass
 
     # set the view size
     renderView1.ViewSize = viewSize
@@ -515,13 +534,17 @@ def createVolume(metrichash, data_reader):
     cDisplay.Opacity = 0.1
     return c
 
-def createImage(metrichash, dataReader, dataDisplay, isIndivImgs):
+def createBasic(metrichash, dataReader, dataDisplay, isIndivImgs):
     camera = GetActiveCamera()
     renderView1 = GetActiveViewOrCreate('RenderView')
     bodyopacity=float(metrichash['bodyopacity'])
     if isIndivImgs:
         dataDisplay.Opacity = bodyopacity
-    return dataDisplay
+    try:
+        colorMetric(dataDisplay, metrichash)
+    except:
+        ColorBy(dataDisplay, ('POINTS', 'SolidColor'))
+    return dataReader
 
 def plotLine(infile):
     matplotlib.use('Agg')
