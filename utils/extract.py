@@ -135,7 +135,14 @@ for kpi in kpihash:
     else:
         export2Blender = False
     if export2Blender:
-        pvutils.exportx3d(outputDir, kpi, d, dataReader)
-
+        try:
+            blenderContext=metrichash['blendercontext'].split(",")
+        except:
+            blenderContext=[]
+        try:
+            renderBody=metrichash['blenderbody'].split(",")
+        except:
+            renderBody=False
+        pvutils.exportx3d(outputDir, kpi, d, dataReader, renderBody, blenderContext)
 
 fp_csv_metrics.close()

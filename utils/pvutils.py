@@ -250,6 +250,9 @@ def readDataFile(dataFileAddress, dataarray):
 
     elif readerType == 'vtk':
         dataReader = LegacyVTKReader(FileNames=[dataFileAddress])
+        
+    elif readerType == 'stl':
+        dataReader = STLReader(FileNames=[dataFileAddress])
 
     return dataReader
 
@@ -537,7 +540,10 @@ def createVolume(metrichash, data_reader):
 def createBasic(metrichash, dataReader, dataDisplay, isIndivImgs):
     camera = GetActiveCamera()
     renderView1 = GetActiveViewOrCreate('RenderView')
-    bodyopacity=float(metrichash['bodyopacity'])
+    try:
+        bodyopacity=float(metrichash['bodyopacity'])
+    except:
+        bodyopacity=1
     if isIndivImgs:
         dataDisplay.Opacity = bodyopacity
     try:
@@ -710,38 +716,43 @@ def makeAnimation(outputDir, kpi, magnification, deleteFrames=True):
         shutil.rmtree(animationFramesDir)
 
 
-def exportx3d(outputDir,kpi, metricObj, dataReader):
+def exportx3d(outputDir,kpi, metricObj, dataReader, blenderContext):
 
     blenderFramesDir = outputDir + kpi + '_blender'
 
     if not (os.path.exists(blenderFramesDir)):
         os.makedirs(blenderFramesDir)
 
-    TimeSteps = getTimeSteps()
-
-
-    firstTimeStep = TimeSteps[0]
-
-    renderView1 = GetActiveViewOrCreate('RenderView')
-
-    renderView1.ViewTime = firstTimeStep
-
-    for num, time in enumerate(TimeSteps):
-        #name = blenderFramesDir + str(num) + '.x3d'
-        name_body = blenderFramesDir + '/' + str(num) + '_body.x3d'
-        name_solo = blenderFramesDir + '/' + str(num) + '_solo.x3d'
-
-        Show(metricObj, renderView1)
-        Hide(dataReader, renderView1)
-        ExportView(name_solo, view=renderView1)
-
+    try:
+        TimeSteps = getTimeSteps()
+        firstTimeStep = TimeSteps[0]
+        renderView1 = GetActiveViewOrCreate('RenderView')
+        renderView1.ViewTime = firstTimeStep
+        for num, time in enumerate(TimeSteps):
+            #name = blenderFramesDir + str(num) + '.x3d'
+            name_body = blenderFramesDir + '/' + str(num) + '_body.x3d'
+            name_solo = blenderFramesDir + '/' + str(num) + '_solo.x3d'
+            Show(metricObj, renderView1)
+            Hide(dataReader, renderView1)
+            ExportView(name_solo, view=renderView1)
+            Show(dataReader, renderView1)
+            Hide(metricObj, renderView1)
+            ExportView(name_body, view=renderView1)
+            animationScene1 = GetAnimationScene()
+            animationScene1.GoToNext()
+    except:
+        renderView1 = GetActiveViewOrCreate('RenderView')
+        name_body = blenderFramesDir + '/' + 'body.x3d'
         Show(dataReader, renderView1)
-        Hide(metricObj, renderView1)
         ExportView(name_body, view=renderView1)
-
-        animationScene1 = GetAnimationScene()
-
-        animationScene1.GoToNext()
+        
+    if blenderContext != None and len(blenderContext) > 0:
+        for i in blenderContext:
+            dataReaderTmp = readDataFile(i, None)
+            renderViewTmp = CreateView('RenderView')
+            readerDisplayTmp = Show(dataReaderTmp, renderViewTmp)
+            name_body = blenderFramesDir + '/' + os.path.splitext(os.path.basename(i))[0] + '.x3d'
+            ExportView(name_body, view=renderViewTmp)
 
     # tar the directory
     data_IO.tarDirectory(blenderFramesDir + ".tar", blenderFramesDir)

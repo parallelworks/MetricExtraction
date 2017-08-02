@@ -17,7 +17,7 @@
         "bodyopacity": "1", 
         "type": "Basic"
     },
-    "ClipUMag": {
+   "streamlinesU": {
         "opacity": "1", 
         "invertcolor": "0", 
         "min": "0", 
@@ -26,30 +26,20 @@
         "imageflip": "true", 
         "colorscale": "Blue to Red Rainbow", 
         "field": "U", 
-        "fieldComponent": "Magnitude", 		
+        "colorByField": "U", 		
+        "colorByFieldComponent": "Magnitude", 		
+		"position":"-6 185 30 8 -300 30",
+		"resolution":"100",
+		"integralDirection":"BOTH",
         "discretecolors": "20", 
+		"tubeRadius":"0.2",
+		"maxStreamLength":"500",
         "bodyopacity": "0.2", 
-        "position": "10.0  center center", 
-        "type": "Clip",
-		"plane": "X",
-		"invert": "false",
-		"animation": "false"
-    },
-    "SliceT": {
-        "opacity": "1", 
-        "invertcolor": "1", 
-        "min": "285", 
-        "max": "300", 
-        "image": "top", 
-        "imageflip": "false", 
-        "colorscale": "Warm to Cool (Extended)", 
-        "field": "T", 
-        "discretecolors": "10",
-        "bodyopacity": "0", 
-        "position": "center center 2.5", 
-        "type": "Slice",
-		"plane": "Z",
-		"invert": "false",
-		"animation": "false"
+        "type": "StreamLines",
+		"animation": "false",
+		 "blender": "true",
+		 "blenderbody": "false"
+        "blendercontext": "output/building1.stl,output/building2.stl,output/building3.stl,output/water.stl,output/ground.stl",
+		"extractStats":"false"
     }
 }
