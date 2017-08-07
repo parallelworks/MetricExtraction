@@ -5,7 +5,6 @@ import os
 import subprocess
 import shutil
 
-
 # For saving plots as pngs
 import matplotlib
 
@@ -76,22 +75,16 @@ def read_csv(f):
 def getfieldsfromkpihash(kpihash):
     cellsarrays = []
     for kpi in kpihash:
-        try:
+        if 'field' in kpihash[kpi]:
             cellsarrays.append(kpihash[kpi]['field'])
-        except:
-            pass
 
     ca = set(cellsarrays)
-
     cellsarrays = list(ca)
     return cellsarrays
 
 
 def isfldScalar(arrayInfo):
-    try:
-        numComps = arrayInfo.GetNumberOfComponents()
-    except:
-        numComps = 1
+    numComps = arrayInfo.GetNumberOfComponents()
     if numComps == 1:
         return True
     else:
@@ -191,7 +184,7 @@ def correctfieldcomponent(datasource, metrichash):
     Set "fieldComponent" to "Magnitude" if the component of vector/tensor fields is not given. For scalar fields set 
     "fieldComponent" to an empty string.
     """
-    try:
+    if 'field' in metrichash:
         kpifld = metrichash['field']
         arrayInfo = datasource.PointData[kpifld]
         if isfldScalar(arrayInfo):
@@ -199,34 +192,75 @@ def correctfieldcomponent(datasource, metrichash):
         else:
             if not 'fieldComponent' in metrichash:
                 metrichash['fieldComponent'] = 'Magnitude'
-    except:
-        kpifld = "None"
+    else:
+        metrichash['field'] = 'None'
+        metrichash['fieldComponent'] = 'None'
+    return metrichash
+
+
+def setKPIFieldDefaults(dataSource, metrichash):
+    # Set component to "Magnitude" if not given for vector/tensor fields
+    metrichash = correctfieldcomponent(dataSource, metrichash)
+
+    # Set default image properties
+    if not ('bodyopacity' in metrichash):
+        metrichash['bodyopacity'] = "0.3"
+    if not ('min' in metrichash):
+        metrichash['min'] = 'auto'
+    if not ('max' in metrichash):
+        metrichash['max'] = 'auto'
+    if not ('discretecolors' in metrichash):
+        metrichash['discretecolors'] = '20'
+    if not ('colorscale' in metrichash):
+        metrichash['colorscale'] = 'Blue to Red Rainbow'
+    if not ('invertcolor' in metrichash):
+        metrichash['invertcolor'] = 'False'
+    if not ('opacity' in metrichash):
+        metrichash['opacity'] = "1"
+    if not ('image' in metrichash):
+        metrichash['image'] = 'None'
+
+    if not('extractStats' in metrichash):
+        if metrichash['field'] == 'None':
+            metrichash['extractStats'] = 'False'
+        else:
+            metrichash['extractStats'] = 'True'
+
+    if not ('animation' in metrichash):
+        metrichash['animation'] = 'False'
+
+    if not ('blender' in metrichash):
+        metrichash['blender'] = 'False'
+    else:
+        try:
+            metrichash['blendercontext'] = metrichash['blendercontext'].split(",")
+        except:
+            metrichash['blendercontext'] = []
+        try:
+            metrichash['blenderbody'] = metrichash['blenderbody'].split(",")
+        except:
+            metrichash['blenderbody'] = False
+
     return metrichash
 
 
 def getReaderTypeFromfileAddress(dataFileAddress):
-    if dataFileAddress.endswith('.exo'):
-        readerType = 'exo'
-    elif dataFileAddress.endswith('system/controlDict'):
+    if dataFileAddress.endswith('system/controlDict'):
         readerType = 'openFOAM'
     else:
-        print('Error: Reader type cannot be set. Please check data file address')
-        sys.exit(1)
+        try:
+            filename, file_extension = os.path.splitext(dataFileAddress)
+            readerType = file_extension.replace('.', '')
+        except:
+            print('Error: Reader type cannot be set. Please check data file address')
+            sys.exit(1)
 
     return readerType
 
 
 def readDataFile(dataFileAddress, dataarray):
-    
-    readerType=None
-    try:
-        readerType = getReaderTypeFromfileAddress(dataFileAddress)
-    except:
-        pass
-    if readerType == None:
-        filename, file_extension = os.path.splitext(dataFileAddress)
-        readerType = file_extension.replace('.','')
 
+    readerType = getReaderTypeFromfileAddress(dataFileAddress)
     if readerType == 'exo':
         # Read the results file : create a new 'ExodusIIReader'
         dataReader = ExodusIIReader(FileName=dataFileAddress)
@@ -308,11 +342,10 @@ def initRenderView (dataReader, viewSize, backgroundColor):
 
 def colorMetric(d, metrichash):
     display = GetDisplayProperties(d)
-
     kpifld = metrichash['field']
     kpifldcomp = metrichash['fieldComponent']
-
     ColorBy(display, ('POINTS', kpifld, kpifldcomp))
+
     Render()
     UpdateScalarBars()
     ctf = GetColorTransferFunction(kpifld)
@@ -321,7 +354,7 @@ def colorMetric(d, metrichash):
     except:
         pass
     try:
-        if metrichash["invertcolor"] == "1":
+        if data_IO.str2bool(metrichash["invertcolor"]):
             ctf.InvertTransferFunction()
     except:
         pass
@@ -330,9 +363,9 @@ def colorMetric(d, metrichash):
         datarange = getdatarange(d, kpifld, kpifldcomp)
         min = datarange[0]
         max = datarange[1]
-        if metrichash["min"] != "auto" and metrichash["min"] != "":
+        if metrichash["min"] != "auto":
              min = float(metrichash["min"])
-        if metrichash["max"] != "auto" and metrichash["max"] != "":
+        if metrichash["max"] != "auto":
              max = float(metrichash["max"])
         ctf.RescaleTransferFunction(min, max)
         if int(metrichash["discretecolors"]) > 0:
@@ -540,16 +573,14 @@ def createVolume(metrichash, data_reader):
 def createBasic(metrichash, dataReader, dataDisplay, isIndivImgs):
     camera = GetActiveCamera()
     renderView1 = GetActiveViewOrCreate('RenderView')
-    try:
-        bodyopacity=float(metrichash['bodyopacity'])
-    except:
-        bodyopacity=1
+    bodyopacity=float(metrichash['bodyopacity'])
     if isIndivImgs:
         dataDisplay.Opacity = bodyopacity
-    try:
-        colorMetric(dataDisplay, metrichash)
-    except:
-        ColorBy(dataDisplay, ('POINTS', 'SolidColor'))
+
+    if not (metrichash['field'] == 'None'):
+        colorMetric(dataReader, metrichash)
+    else:
+        ColorBy(dataDisplay, ('POINTS', ''))
     return dataReader
 
 def plotLine(infile):
@@ -652,11 +683,11 @@ def createLine(metrichash, kpi, data_reader, outputDir="."):
     return l, ave
 
 
-def adjustCamera(view, renderView1, metrichash, flip):
+def adjustCamera(view, renderView1, metrichash):
     camera=GetActiveCamera()
-    if view == "iso":
+    if view.startswith("iso"):
         camera.SetFocalPoint(0, 0, 0)
-        if (flip == "true"):
+        if (view == "iso-flipped"):
             camera.SetPosition(0, 1, 0)
         else:
             camera.SetPosition(0, -1, 0)

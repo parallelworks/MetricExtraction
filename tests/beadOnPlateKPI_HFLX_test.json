@@ -1,0 +1,20 @@
+{
+    "clipHFLX": {
+        "opacity": "0.9", 
+        "invertcolor": "0", 
+        "min": "-1200", 
+        "max": "1700", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "HFL", 
+        "fieldComponent": "X", 		
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "0.0  center -0.1", 
+        "type": "Clip",
+		"plane": "X",
+		"invert": "true",
+		"animation": "true",
+		"extractStats": "true"
+    }
+}

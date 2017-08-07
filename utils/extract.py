@@ -44,9 +44,9 @@ renderView1, readerDisplay = pvutils.initRenderView(dataReader, viewSize,
 
 print("Generating KPIs")
 
-# Set component to "Magnitude" if not given for vector/tensor fields
+# Set the default values for missing fields in the kpihash
 for kpi in kpihash:
-    kpihash[kpi] = pvutils.correctfieldcomponent(dataReader, kpihash[kpi])
+    kpihash[kpi] = pvutils.setKPIFieldDefaults(dataReader, kpihash[kpi])
 
 fp_csv_metrics = data_IO.open_file(metricFile, "w")
 fp_csv_metrics.write(",".join(['metric','ave','min','max','sd'])+"\n")
@@ -54,95 +54,56 @@ fp_csv_metrics.write(",".join(['metric','ave','min','max','sd'])+"\n")
 renderView1.InteractionMode = '2D'
 renderView1.OrientationAxesVisibility = 0
 
-# Save the default STL file
-# pvutils.saveSTLfile(renderView1,outputDir + "/out_stl.png",magnification,100)
-
 for kpi in kpihash:
     
     metrichash = kpihash[kpi]
     kpitype = metrichash['type']
-    
-    if 'field' in metrichash:
-        kpifield = metrichash['field']
-    else:
-        kpifield = "None"
-        
-    if 'fieldComponent' in metrichash:
-        kpiComp = metrichash['fieldComponent']
-    else:
-        kpiComp = "None"
-
-    if 'image' in metrichash:
-        kpiimage = metrichash['image']
-    else:
-        kpiimage = "None"
-        
-    if 'imageflip' in metrichash:
-        kpiimageflip = metrichash['imageflip']
-    else:
-        kpiimageflip = "None"
+    kpifield = metrichash['field']
+    kpiComp = metrichash['fieldComponent']
+    kpiimage = metrichash['image']
+    extractStats = data_IO.str2bool(metrichash['extractStats'])
+    makeAnim = data_IO.str2bool(metrichash['animation'])
+    export2Blender = data_IO.str2bool(metrichash['blender'])
 
     if individualImages:
         HideAll()
         Show(dataReader, renderView1)
-        if kpiimage != "None" and kpiimage != "" and kpiimage != "plot":
-            pvutils.adjustCamera(kpiimage, renderView1, metrichash, kpiimageflip)
+        if kpiimage != "None" and kpiimage != "plot":
+            pvutils.adjustCamera(kpiimage, renderView1, metrichash)
     
     print(kpi)
     
-    if 'extractStats' in metrichash:
-        extractStats = data_IO.str2bool(metrichash['extractStats'])
-    else:
-        extractStats = True
-
-    ave=[]
-    if kpitype=="Slice":
+    ave = []
+    if kpitype == "Slice":
         d = pvutils.createSlice(metrichash, dataReader, readerDisplay, individualImages)
-    elif kpitype== "Clip":
+    elif kpitype == "Clip":
         d = pvutils.createClip(metrichash, dataReader, readerDisplay, individualImages)
-    elif kpitype== "Probe":
+    elif kpitype == "Probe":
         d = pvutils.createProbe(metrichash, dataReader)
-    elif kpitype== "Line":
+    elif kpitype == "Line":
         d,ave = pvutils.createLine(metrichash, kpi, dataReader, outputDir)
-    elif kpitype== "StreamLines":
+    elif kpitype == "StreamLines":
         d = pvutils.createStreamTracer(metrichash, dataReader, readerDisplay, individualImages)
-    elif kpitype== "Volume":
+    elif kpitype == "Volume":
         d = pvutils.createVolume(metrichash, dataReader)
-    elif kpitype== "Basic":
+    elif kpitype == "Basic":
         d = pvutils.createBasic(metrichash, dataReader, readerDisplay, individualImages)
-        if kpifield == "None":
-            extractStats = False
 
     if extractStats:
-        #pvutils.extractStatsOld(d, kpi, kpifield, kpiComp, kpitype, fp_csv_metrics, ave)
         pvutils.extractStats(d, kpi, kpifield, kpiComp, kpitype, fp_csv_metrics)
 
     if individualImages:
-        if kpiimage != "None" and kpiimage != "" and kpiimage != "plot":
+        if kpiimage != "None" and kpiimage != "plot":
             if not (os.path.exists(outputDir)):
                 os.makedirs(outputDir)
             SaveScreenshot(outputDir + "/out_" + kpi + ".png", magnification=magnification, quality=100)
 
-    if 'animation' in metrichash:
-        makeAnim = data_IO.str2bool(metrichash['animation'])
-    else:
-        makeAnim = False
     if makeAnim:
         pvutils.makeAnimation(outputDir, kpi, magnification)
 
-    if 'blender' in metrichash:
-        export2Blender = data_IO.str2bool(metrichash['blender'])
-    else:
-        export2Blender = False
     if export2Blender:
-        try:
-            blenderContext=metrichash['blendercontext'].split(",")
-        except:
-            blenderContext=[]
-        try:
-            renderBody=metrichash['blenderbody'].split(",")
-        except:
-            renderBody=False
+        blenderContext=metrichash['blendercontext']
+        renderBody=metrichash['blenderbody']
         pvutils.exportx3d(outputDir, kpi, d, dataReader, renderBody, blenderContext)
 
 fp_csv_metrics.close()

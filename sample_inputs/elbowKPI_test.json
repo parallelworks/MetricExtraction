@@ -1,4 +1,16 @@
 {
+    "domainImage": {
+        "image": "iso", 
+        "bodyopacity": "0.3", 
+        "type": "Basic"
+    },
+    "domainUx": {
+        "image": "iso-flipped", 
+        "type": "Basic",
+        "field": "U", 
+        "fieldComponent": "X",
+		"animation": "false"
+    },
     "ClipUx": {
         "opacity": "1", 
         "invertcolor": "0", 

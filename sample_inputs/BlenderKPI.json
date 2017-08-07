@@ -37,8 +37,8 @@
         "bodyopacity": "0.2", 
         "type": "StreamLines",
 		"animation": "false",
-		 "blender": "true",
-		 "blenderbody": "false"
+        "blender": "true",
+		"blenderbody": "false",
         "blendercontext": "output/building1.stl,output/building2.stl,output/building3.stl,output/water.stl,output/ground.stl",
 		"extractStats":"false"
     }
