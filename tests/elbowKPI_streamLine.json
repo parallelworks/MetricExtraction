@@ -1,0 +1,26 @@
+{
+    "streamlinesU": {
+        "opacity": "1", 
+        "invertcolor": "0", 
+        "min": "0", 
+        "max": "2", 
+        "image": "iso", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "U", 
+        "colorByField": "Vorticity", 		
+        "colorByFieldComponent": "Magnitude", 		
+		"seedType": "plane",
+		"plane": "X",
+		"center":"center 10 center",
+		"position":"0.0 64.0 -4.5 16.0 -10 10",
+		"resolution":"10",
+		"integralDirection":"BOTH",
+        "discretecolors": "20", 
+		"tubeRadius":"0.2",
+		"maxStreamLength":"200",
+        "bodyopacity": "0.3", 
+        "type": "StreamLines",
+		"animation": "false",
+		"blender": "true"
+    }
+}

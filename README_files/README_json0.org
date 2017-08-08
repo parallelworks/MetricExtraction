@@ -63,9 +63,19 @@ Syntax for extracting various metric types are described below:
 - *Volume*: box in domain
   - position="xmin xmax ymin ymax zmin zmax"
 
-- *StreamLines*: 
-  - position="x1 y1 z1 x2 y2 z2" specifies the coordinates of the start point (x1, y1, z1) and end point (x2, y2, z2)
-	of the line segment for seeding Stream lines. If "center" is specified in any position, auto calculates focal point of model.
+- *StreamLines*:
+  - seedType="line" (default) or "plane" specifies the seed type. If seed type is set to "plane", the "plane" and 
+	"center" options also need to be provided. See =sample_inputs/cyclone_streamLine.json= for an example.
+  - position: 
+	- For "line" seed type position specifies the coordinates of the start point (x1, y1, z1) and end point (x2, y2, z2)
+      of the line segment for seeding Stream lines. The format is "x1 y1 z1 x2 y2 z2"
+      If "center" is specified in any position, auto calculates focal point of model.
+	- For "plane" seed type position specifies the coordinates of the bounding box of the planar section for seeding the 
+	  points. The format is "x1 x2 y1 y2 z1 z2".
+  - "plane": "x","y" or "z". This option is only required for "plane" seed types to specify the direction of
+	the seed plane (normal to the "x","y" or "z" axis).
+  - "center": "x y z". This option is only required for "plane" seed types the coordinate of a point on the 
+	seed plane.
   - resolution specifies the number of seeds generated on the line.
   - colorByField: domain field to use for coloring the streamlines. The "Vorticity" vector is also available.
   - colorByFieldComponent: The component of the vector/tensor fields for coloring the streamlines. 
@@ -97,7 +107,7 @@ If an image is desired, define parameters below:
   overwrite the default Paraview settings if provided (see =sample_inputs/elbowKPI.json= for an example):
   + *barTitle* color bar title (\LaTeX expressions can also be specified)
   + *ComponentTitle*
-  + *FontColor* rgb color values. For example for white color specify set to "1 1 1"
+  + *FontColor* RGB color values. For example for white color specify set to "1 1 1"
   + *FontSize*
   + *LabelFormat* format for displaying the color bar numbers, e.g. "%4.3g" 
 

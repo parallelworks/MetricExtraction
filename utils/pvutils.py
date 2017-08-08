@@ -39,11 +39,11 @@ def getParaviewVersion():
 
 
 def planeNormalFromName(planeName):
-    if planeName == "X" or planeName == "x":
+    if planeName.lower() == "x":
         normal = [1.0, 0.0, 0.0]
-    if planeName == "Y" or planeName == "y":
+    if planeName.lower() == "y":
         normal = [0.0, 1.0, 0.0]
-    if planeName == "Z" or planeName == "z":
+    if planeName.lower() == "z":
         normal = [0.0, 0.0, 1.0]
     return normal
 
@@ -203,6 +203,8 @@ def setKPIFieldDefaults(dataSource, metrichash):
     metrichash = correctfieldcomponent(dataSource, metrichash)
 
     # Set default image properties
+    if not ('image' in metrichash):
+        metrichash['image'] = 'None'
     if not ('bodyopacity' in metrichash):
         metrichash['bodyopacity'] = "0.3"
     if not ('min' in metrichash):
@@ -217,8 +219,11 @@ def setKPIFieldDefaults(dataSource, metrichash):
         metrichash['invertcolor'] = 'False'
     if not ('opacity' in metrichash):
         metrichash['opacity'] = "1"
-    if not ('image' in metrichash):
-        metrichash['image'] = 'None'
+
+    # Set default streamline properties
+    if metrichash['type'] == "StreamLines":
+        if not ('seedType' in metrichash):
+            metrichash['seedType'] = 'Line'
 
     if not('extractStats' in metrichash):
         if metrichash['field'] == 'None':
@@ -456,17 +461,31 @@ def createStreamTracer(metrichash, data_reader, data_display, isIndivImages):
         data_display.Opacity = bodyopacity
         data_display.ColorArrayName = ['POINTS', '']
 
-    streamTracer = StreamTracer(Input=data_reader,
-                                 SeedType='High Resolution Line Source')
+    seedPosition = setviewposition(metrichash['position'], camera)
+    if metrichash['seedType'].lower() == 'line':
+        streamTracer = StreamTracer(Input=data_reader,
+                                    SeedType='High Resolution Line Source')
+        streamTracer.SeedType.Point1 = seedPosition[0:3]
+        streamTracer.SeedType.Point2 = seedPosition[3:6]
+        streamTracer.SeedType.Resolution = int(metrichash['resolution'])
+
+    elif metrichash['seedType'].lower() == 'plane':
+        # create a new 'Point Plane Interpolator' for seeding the stream lines
+        pointPlaneInterpolator = PointPlaneInterpolator(Input=data_reader, Source='Bounded Plane')
+        pointPlaneInterpolator.Source.Center = setviewposition(metrichash['center'], camera)
+        pointPlaneInterpolator.Source.BoundingBox = seedPosition
+        pointPlaneInterpolator.Source.Normal = planeNormalFromName(metrichash['plane'])
+        pointPlaneInterpolator.Source.Resolution = int(metrichash['resolution'])
+        UpdatePipeline()
+        streamTracer = StreamTracerWithCustomSource(Input=data_reader,
+                                                    SeedSource=pointPlaneInterpolator)
+
 
     kpifld = metrichash['field'] #!!!!!!!
     streamTracer.Vectors = ['POINTS', kpifld]
-    LinePoints = setviewposition(metrichash['position'], camera)
-    streamTracer.SeedType.Point1 = LinePoints[0:3]
-    streamTracer.SeedType.Point2 = LinePoints[3:6]
-    streamTracer.SeedType.Resolution = int(metrichash['resolution'])
+    
     streamTracer.IntegrationDirection = metrichash['integralDirection'] # 'BACKWARD', 'FORWARD' or  'BOTH'
-
+    streamTracer.IntegratorType = 'Runge-Kutta 4'
     # To do : Add a default value based on domain size ?
     streamTracer.MaximumStreamlineLength = float(metrichash['maxStreamLength'])
 
