@@ -1,4 +1,12 @@
 {
+	"lateral_area":{
+		"IsParaviewMetric": "False",
+		"outputName":"lateral_area",													  
+		"outputFileNameTemplate":  "../example_inputs/pyCone/results/case_@@i@@/volAndLat.txt",	  
+		"outputFlag": "",																  
+		"delimitor":  " ",															  
+		"locationInFile": "0"                                                               
+	},
     "domainImage": {
         "image": "iso", 
         "bodyopacity": "0.3", 
