@@ -1,0 +1,25 @@
+{
+	"lateral_area":{
+		"IsParaviewMetric": "False",
+		"outputName":"lateral_area",													  
+		"outputFileNameTemplate":  "../example_inputs/pyCone/results/case_@@i@@/volAndLat.txt",	  
+		"outputFlag": "",																  
+		"delimitor":  " ",															  
+		"locationInFile": "0"                                                               
+	},
+	    "lineUX": {
+        "field": "U", 
+        "fieldComponent": "X", 		
+        "image": "plot", 
+        "type": "Line", 
+		"resolution": "20",
+        "position": "56.0 0.0 0.0 56.0 63.0 0.0"
+	},
+	    "lineP": {
+        "field": "p", 
+        "image": "plot", 
+        "type": "Line", 
+		"resolution": "20",
+        "position": "56.0 0.0 0.0 56.0 63.0 0.0"
+	}
+}

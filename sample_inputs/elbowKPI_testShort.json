@@ -1,0 +1,101 @@
+{
+  "lateral_area": {
+    "IsParaviewMetric": "False",
+    "outputName": "lateral_area",
+    "outputFileNameTemplate": "../example_inputs/pyCone/results/case_@@i@@/volAndLat.txt",
+    "outputFlag": "",
+    "delimitor": " ",
+    "locationInFile": "0"
+  },
+  "domainImage": {
+    "image": "iso",
+    "imageName": "domainImage_{:03d}.tif",
+    "type": "Basic"
+  },
+  "domainUx": {
+    "image": "iso-flipped",
+    "type": "Basic",
+    "field": "U",
+    "fieldComponent": "X",
+    "animation": "false"
+  },
+  "ClipUx": {
+    "image": "top",
+    "field": "U",
+    "fieldComponent": "X",
+    "position": "10.0  center center",
+    "type": "Clip",
+    "plane": "X",
+    "invert": "true",
+    "animation": "false"
+  },
+  "ClipUMag": {
+    "opacity": "1",
+    "invertcolor": "0",
+    "min": "0",
+    "max": "5",
+    "image": "top",
+    "colorscale": "Blue to Red Rainbow",
+    "field": "U",
+    "discretecolors": "20",
+    "bodyopacity": "0.3",
+    "position": "10.0  center center",
+    "type": "Clip",
+    "plane": "X",
+    "invert": "true",
+    "animation": "false"
+  },
+  "sliceUy": {
+    "min": "0",
+    "max": "4",
+    "image": "iso",
+    "field": "U",
+    "fieldComponent": "Y",
+    "position": "center center 0.0",
+    "type": "Slice",
+    "plane": "Z",
+    "animation": "true",
+    "animationName": "sliceUy_{:03d}.gif"
+  },
+  "streamlinesU": {
+    "min": "0",
+    "max": "2",
+    "image": "iso",
+    "field": "U",
+    "colorByField": "Vorticity",
+    "position": "49 62 0 63 62 0",
+    "resolution": "10",
+    "integralDirection": "BOTH",
+    "tubeRadius": "0.2",
+    "maxStreamLength": "200",
+    "type": "StreamLines",
+    "animation": "false",
+    "blender": "true"
+  },
+  "lineUX": {
+    "field": "U",
+    "fieldComponent": "X",
+    "image": "plot",
+    "imageName": "out_lineUX_{:03d}.png",
+    "type": "Line",
+    "resolution": "20",
+    "position": "56.0 0.0 0.0 56.0 63.0 0.0"
+  },
+  "lineP": {
+    "field": "p",
+    "image": "plot",
+    "type": "Line",
+    "resolution": "20",
+    "position": "56.0 0.0 0.0 56.0 63.0 0.0"
+  },
+  "volP": {
+    "field": "p",
+    "type": "Volume",
+    "position": "0 16 0 10 -1 1"
+  },
+  "probeUMagInlet2": {
+    "field": "U",
+    "type": "Probe",
+    "position": "55.0 -3.0 0.0"
+  }
+}

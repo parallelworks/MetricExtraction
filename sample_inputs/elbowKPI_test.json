@@ -9,6 +9,7 @@
 	},
     "domainImage": {
         "image": "iso", 
+		"imageName": "domainImage_{:03d}.png",
         "bodyopacity": "0.3", 
         "type": "Basic"
     },
@@ -68,7 +69,8 @@
         "type": "Slice",
 		"plane": "Z",
 		"invert": "false",
-		"animation": "true"
+		"animation": "true",
+		"animationName":"sliceUy_{:03d}.gif"
     },
     "streamlinesU": {
         "opacity": "1", 
@@ -95,6 +97,7 @@
         "field": "U", 
         "fieldComponent": "X", 		
         "image": "plot", 
+		"imageName": "out_lineUX_{:03d}.png",
         "type": "Line", 
 		"resolution": "20",
         "position": "56.0 0.0 0.0 56.0 63.0 0.0"
@@ -105,5 +108,16 @@
         "type": "Line", 
 		"resolution": "20",
         "position": "56.0 0.0 0.0 56.0 63.0 0.0"
-	}
+	},
+    "volP": {
+        "field": "p", 
+        "type": "Volume", 
+        "position": "0 16 0 10 -1 1"
+    }, 
+	"probeUMagInlet2": {
+        "field": "U", 
+        "fieldComponent": "Magnitude", 		
+        "type": "Probe", 
+        "position": "55.0 -3.0 0.0"
+    }
 }

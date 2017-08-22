@@ -1,0 +1,25 @@
+{
+    "ClipUx": {
+        "opacity": "1", 
+        "invertcolor": "0", 
+        "min": "0", 
+        "max": "5", 
+        "image": "top", 
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "U", 
+        "fieldComponent": "X", 		
+        "discretecolors": "20", 
+        "bodyopacity": "0.3", 
+        "position": "10.0  center center", 
+        "type": "Clip",
+		"plane": "X",
+		"invert": "true",
+		"animation": "false"
+    },
+	"probeUMagInlet2": {
+        "field": "U", 
+        "fieldComponent": "Magnitude", 		
+        "type": "Probe", 
+        "position": "55.0 -3.0 0.0"
+    }
+}
