@@ -66,7 +66,7 @@ If an image is desired, define parameters below:
     -   **CameraParallelProjection** = 1 or 0
 
     You can find the above camera properties for your desired view from the "Adjust Camera" window in Paraview, or via starting a trace.
--   **imageName** : This field specifies the image name format. A number can be specified by using Python formatting. For example,
+-   **imageName** : This field specifies the image name format. A number can be specified by using Python formatting (using new style, see [see <https://pyformat.info/#number>](https://pyformat.info/#number)). For example,
 
     ``` example
     "imageName": "domainImage_{:03d}.tif"
