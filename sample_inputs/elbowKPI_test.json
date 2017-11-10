@@ -1,123 +1,123 @@
 {
-	"lateral_area":{
-		"IsParaviewMetric": "False",
-		"outputName":"lateral_area",													  
-		"outputFileNameTemplate":  "../example_inputs/pyCone/results/case_@@i@@/volAndLat.txt",	  
-		"outputFlag": "",																  
-		"delimitor":  " ",															  
-		"locationInFile": "0"                                                               
-	},
-    "domainImage": {
-        "image": "iso", 
-		"imageName": "domainImage_{:03d}.png",
-        "bodyopacity": "0.3", 
-        "type": "Basic"
-    },
-    "domainUx": {
-        "image": "iso-flipped", 
-        "type": "Basic",
-        "field": "U", 
-        "fieldComponent": "X",
-		"animation": "false"
-    },
-    "ClipUx": {
-        "opacity": "1", 
-        "invertcolor": "0", 
-        "min": "0", 
-        "max": "5", 
-        "image": "top", 
-        "colorscale": "Blue to Red Rainbow", 
-        "field": "U", 
-        "fieldComponent": "X", 		
-        "discretecolors": "20", 
-        "bodyopacity": "0.3", 
-        "position": "10.0  center center", 
-        "type": "Clip",
-		"plane": "X",
-		"invert": "true",
-		"animation": "false"
-    },
-    "ClipUMag": {
-        "opacity": "1", 
-        "invertcolor": "0", 
-        "min": "0", 
-        "max": "5", 
-        "image": "top", 
-        "colorscale": "Blue to Red Rainbow", 
-        "field": "U", 
-        "fieldComponent": "Magnitude", 		
-        "discretecolors": "20", 
-        "bodyopacity": "0.3", 
-        "position": "10.0  center center", 
-        "type": "Clip",
-		"plane": "X",
-		"invert": "true",
-		"animation": "false"
-    },
-    "sliceUy": {
-        "opacity": "1", 
-        "invertcolor": "0", 
-        "min": "0", 
-        "max": "4", 
-        "image": "iso", 
-        "colorscale": "Blue to Red Rainbow", 
-        "field": "U", 
-        "fieldComponent": "Y", 		
-        "discretecolors": "20", 
-        "bodyopacity": "0.3", 
-        "position": "center center 0.0", 
-        "type": "Slice",
-		"plane": "Z",
-		"invert": "false",
-		"animation": "true",
-		"animationName":"sliceUy_{:03d}.gif"
-    },
-    "streamlinesU": {
-        "opacity": "1", 
-        "invertcolor": "0", 
-        "min": "0", 
-        "max": "2", 
-        "image": "iso", 
-        "colorscale": "Blue to Red Rainbow", 
-        "field": "U", 
-        "colorByField": "Vorticity", 		
-        "colorByFieldComponent": "Magnitude", 		
-		"position":"49 62 0 63 62 0",
-		"resolution":"10",
-		"integralDirection":"BOTH",
-        "discretecolors": "20", 
-		"tubeRadius":"0.2",
-		"maxStreamLength":"200",
-        "bodyopacity": "0.3", 
-        "type": "StreamLines",
-		"animation": "false",
-		"blender": "true"
-    },
-	    "lineUX": {
-        "field": "U", 
-        "fieldComponent": "X", 		
-        "image": "plot", 
-		"imageName": "out_lineUX_{:03d}.png",
-        "type": "Line", 
-		"resolution": "20",
-        "position": "56.0 0.0 0.0 56.0 63.0 0.0"
-	},
-	    "lineP": {
-        "field": "p", 
-        "image": "plot", 
-        "type": "Line", 
-		"resolution": "20",
-        "position": "56.0 0.0 0.0 56.0 63.0 0.0"
-	},
-    "volP": {
-        "field": "p", 
-        "type": "Volume", 
-        "position": "0 16 0 10 -1 1"
-    }, 
-	"probeUMagInlet2": {
-        "field": "U", 
-        "fieldComponent": "Magnitude", 		
-        "type": "Probe", 
-        "position": "55.0 -3.0 0.0"
-    }
+  "ClipUMag": {
+    "animation": "false",
+    "bodyopacity": "0.3",
+    "colorscale": "Blue to Red Rainbow",
+    "discretecolors": "20",
+    "field": "U",
+    "fieldComponent": "Magnitude",
+    "image": "top",
+    "invert": "true",
+    "invertcolor": "0",
+    "max": "5",
+    "min": "0",
+    "opacity": "1",
+    "plane": "X",
+    "position": "10.0  center center",
+    "type": "Clip"
+  },
+  "ClipUx": {
+    "animation": "false",
+    "bodyopacity": "0.3",
+    "colorscale": "Blue to Red Rainbow",
+    "discretecolors": "20",
+    "field": "U",
+    "fieldComponent": "X",
+    "image": "top",
+    "invert": "true",
+    "invertcolor": "0",
+    "max": "5",
+    "min": "0",
+    "opacity": "1",
+    "plane": "X",
+    "position": "10.0  center center",
+    "type": "Clip"
+  },
+  "domainImage": {
+    "bodyopacity": "0.3",
+    "image": "iso",
+    "imageName": "domainImage_{:03d}.png",
+    "type": "Basic"
+  },
+  "domainUx": {
+    "animation": "false",
+    "field": "U",
+    "fieldComponent": "X",
+    "image": "iso-flipped",
+    "type": "Basic"
+  },
+  "lateral_area": {
+    "IsParaviewMetric": "False",
+    "delimitor": " ",
+    "locationInFile": "0",
+    "outputFileNameTemplate": "../example_inputs/pyCone/results/case_@@i@@/volAndLat.txt",
+    "outputFlag": "",
+    "outputName": "lateral_area"
+  },
+  "lineP": {
+    "field": "p",
+    "image": "plot",
+    "position": "56.0 0.0 0.0 56.0 63.0 0.0",
+    "resolution": "20",
+    "type": "Line"
+  },
+  "lineUX": {
+    "field": "U",
+    "fieldComponent": "X",
+    "image": "plot",
+    "imageName": "out_lineUX_{:03d}.png",
+    "position": "56.0 0.0 0.0 56.0 63.0 0.0",
+    "resolution": "20",
+    "type": "Line"
+  },
+  "probeUMagInlet2": {
+    "field": "U",
+    "fieldComponent": "Magnitude",
+    "position": "55.0 -3.0 0.0",
+    "type": "Probe"
+  },
+  "sliceUy": {
+    "animation": "true",
+    "animationName": "sliceUy_{:03d}.gif",
+    "bodyopacity": "0.3",
+    "colorscale": "Blue to Red Rainbow",
+    "discretecolors": "20",
+    "field": "U",
+    "fieldComponent": "Y",
+    "image": "iso",
+    "invert": "false",
+    "invertcolor": "0",
+    "max": "4",
+    "min": "0",
+    "opacity": "1",
+    "plane": "Z",
+    "position": "center center 0.0",
+    "type": "Slice"
+  },
+  "streamlinesU": {
+    "animation": "false",
+    "blender": "true",
+    "bodyopacity": "0.3",
+    "colorByField": "Vorticity",
+    "colorByFieldComponent": "Magnitude",
+    "colorscale": "Blue to Red Rainbow",
+    "discretecolors": "20",
+    "field": "U",
+    "image": "iso",
+    "integralDirection": "BOTH",
+    "invertcolor": "0",
+    "max": "2",
+    "maxStreamLength": "200",
+    "min": "0",
+    "opacity": "1",
+    "position": "49 62 0 63 62 0",
+    "resolution": "10",
+    "tubeRadius": "0.2",
+    "type": "StreamLines"
+  },
+  "volP": {
+    "field": "p",
+    "position": "0 16 0 10 -1 1",
+    "type": "Volume"
+  }
 }

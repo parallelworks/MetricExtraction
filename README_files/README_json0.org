@@ -110,7 +110,7 @@ If an image is desired, define parameters below:
   =example_outputs/=
   results in
   #+BEGIN_EXAMPLE
-  example_outputs/domainImage_001.tif"
+  example_outputs/domainImage_001.tif
   #+END_EXAMPLE
   The default image name is =plot_<kpiName>.png= for line plots and =out_<kpiName>.png= for all other image types,
   where =<kpiName>= is the title of the metrics entery in the kpi.json file.
