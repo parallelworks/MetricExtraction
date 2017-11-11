@@ -1,0 +1,23 @@
+{
+  "streamlinesU": {
+    "animation": "false",
+    "blender": "true",
+    "bodyopacity": "0.3",
+    "colorByField": "Vorticity",
+    "colorByFieldComponent": "Magnitude",
+    "colorscale": "Blue to Red Rainbow",
+    "discretecolors": "20",
+    "field": "U",
+    "image": "iso",
+    "integralDirection": "BOTH",
+    "invertcolor": "0",
+    "max": "2",
+    "maxStreamLength": "200",
+    "min": "0",
+    "opacity": "1",
+    "position": "49 62 0 63 62 0",
+    "resolution": "10",
+    "tubeRadius": "0.2",
+    "type": "StreamLines"
+  }
+}
