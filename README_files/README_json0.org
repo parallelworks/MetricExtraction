@@ -89,6 +89,13 @@ Syntax for extracting various metric types are described below:
   - integralDirection: the direction for generating streamlines. The value can be set to "BACKWARD", "FORWARD" or  "BOTH".
   - tubeRadius: The radius of streamlines tubes
   - maxStreamLength: The maximum length of streamlines.
+- *WarpByVector*: 
+  - scaleFactor: specifies the scaling factor for the warp (each component of the selected vector, specified by "field", will be multiplied by the value of this property before being used to compute new point coordinates). default: 1.0
+  - colorByField: domain field to use for coloring the warped shape. Default is set to "field" 
+  - colorByFieldComponent: The component of the vector/tensor fields for coloring the warped shape.
+	If =colorByFieldComponent= is not given for vector/tensor quantities, the magnitude of the desired
+	quantity will be extracted, i.e., the default is "colorByFieldComponent": "Magnitude".
+  - "extractStats" is set to "false" for this type.
 
 If an image is desired, define parameters below:
 - *image*: iso, iso-flipped, top (or "+z"), bottom (or "+z"), left (or "-y"), right (or "+y"), front (or "+x"), back (or "-x") - Line type can
@@ -129,6 +136,7 @@ If an image is desired, define parameters below:
   + *FontColor* RGB color values. For example for white color specify set to "1 1 1"
   + *FontSize*
   + *LabelFormat* format for displaying the color bar numbers, e.g. "%4.3g"
+- *representationType*: Set the representation type to "Surface With Edges", "3D Glyphs", "Outline", "Point Gaussian", "Points", "Surface" or "Wireframe" (default: "Surface")
 
 If animation is desired, define parameters below:
 - *animation*: "true"
