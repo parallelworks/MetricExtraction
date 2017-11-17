@@ -28,8 +28,7 @@ The below parameters need to be specified for each of the desired metrics:
 - *type*: Specifies the type of metric. The types are "Clip", "Line", "Probe", "Slice", "Volume" and "StreamLines".
   Additional fields for each metric type are listed below.
 - *position*: See below type definition for position description
-- *extractStats*: Set to "false" if quantitative metrics to the csv file (ave,min,max,sd) is not needed (default: "true").
-
+- *extractStats*: Set to "false" if quantitative metrics to the csv file (ave,min,max,sd) is not needed (default: "true"). *Note* =extractStats= is set to =false= for =WarpByVector= type. 
 
 Syntax for extracting various metric types are described below:
 
@@ -95,11 +94,11 @@ Syntax for extracting various metric types are described below:
   - colorByFieldComponent: The component of the vector/tensor fields for coloring the warped shape.
 	If =colorByFieldComponent= is not given for vector/tensor quantities, the magnitude of the desired
 	quantity will be extracted, i.e., the default is "colorByFieldComponent": "Magnitude".
-  - "extractStats" is set to "false" for this type.
+  - *Note* "extractStats" is set to "false" for this type.
 
 If an image is desired, define parameters below:
-- *image*: iso, iso-flipped, top (or "+z"), bottom (or "+z"), left (or "-y"), right (or "+y"), front (or "+x"), back (or "-x") - Line type can
-  specify "plot" type to plot the line.
+- *image*: "iso", "iso-flipped", "top" (or "+z"), "bottom" (or "+z"), "left" (or "-y"), "right" (or "+y"), "front" (or "+x"), "back" (or "-x") - Line type can
+  specify "plot" type to plot the line. Setting to "None" results in no images (default: "None").
  To set a view to a customized view set image to "customize" and provide the following
  properties (see =sample_inputs/elbowKPI.json= for an example)
   + *CameraPosition* = "x y z"
@@ -119,8 +118,9 @@ If an image is desired, define parameters below:
   #+BEGIN_EXAMPLE
   example_outputs/domainImage_001.tif
   #+END_EXAMPLE
+  *Note*: The image number should be provided when calling =extract.py= (i.e., the 5th  argument, =caseNumber=) for the number replacement in the image name work correctly. 
   The default image name is =plot_<kpiName>.png= for line plots and =out_<kpiName>.png= for all other image types,
-  where =<kpiName>= is the title of the metrics entery in the kpi.json file.
+  where =<kpiName>= is the title of the metrics entry in the kpi.json file.
 
 - *min*: Minimum value for customizing/rescaling the data range (default: "auto")
 - *max*: Maximum value for customizing/rescaling the data range (default: "auto")
@@ -139,11 +139,11 @@ If an image is desired, define parameters below:
 - *representationType*: Set the representation type to "Surface With Edges", "3D Glyphs", "Outline", "Point Gaussian", "Points", "Surface" or "Wireframe" (default: "Surface")
 
 If animation is desired, define parameters below:
-- *animation*: "true"
-- *animationName* : This field specifies the animation name format. For detailes see the
+- *animation*: "true" (default: "false", which results in no animation)
+- *animationName* : This field specifies the animation name format. For details see the
   =imageName= entry above.
   The default image name is =out_<kpiName>.gif=
-  where =<kpiName>= is the title of the metrics entery in the kpi.json file.
+  where =<kpiName>= is the title of the metrics entry in the kpi.json file.
 
 - *image*, *min*, *max*, *colorscale*, *invertcolor*, *discretecolors*, *opacity*, *bodyopacity* and
   the parameters for specifying color bar properties are the same as parameters in the image section

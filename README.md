@@ -13,7 +13,7 @@ The below parameters need to be specified for each of the desired metrics:
 -   **fieldComponent**: For vector/tensor quantities specify the desired component as fieldComponent. If `fieldComponent` is not given for vector/tensor quantities, the magnitude of the desired quantity will be extracted, i.e., the default is "fieldComponent": "Magnitude"
 -   **type**: Specifies the type of metric. The types are "Clip", "Line", "Probe", "Slice", "Volume" and "StreamLines". Additional fields for each metric type are listed below.
 -   **position**: See below type definition for position description
--   **extractStats**: Set to "false" if quantitative metrics to the csv file (ave,min,max,sd) is not needed (default: "true").
+-   **extractStats**: Set to "false" if quantitative metrics to the csv file (ave,min,max,sd) is not needed (default: "true"). **Note** `extractStats` is set to `false` for `WarpByVector` type.
 
 Syntax for extracting various metric types are described below:
 
@@ -59,11 +59,11 @@ Syntax for extracting various metric types are described below:
     -   scaleFactor: specifies the scaling factor for the warp (each component of the selected vector, specified by "field", will be multiplied by the value of this property before being used to compute new point coordinates). default: 1.0
     -   colorByField: domain field to use for coloring the warped shape. Default is set to "field"
     -   colorByFieldComponent: The component of the vector/tensor fields for coloring the warped shape. If `colorByFieldComponent` is not given for vector/tensor quantities, the magnitude of the desired quantity will be extracted, i.e., the default is "colorByFieldComponent": "Magnitude".
-    -   "extractStats" is set to "false" for this type.
+    -   **Note** "extractStats" is set to "false" for this type.
 
 If an image is desired, define parameters below:
 
--   **image**: iso, iso-flipped, top (or "+z"), bottom (or "+z"), left (or "-y"), right (or "+y"), front (or "+x"), back (or "-x") - Line type can specify "plot" type to plot the line. To set a view to a customized view set image to "customize" and provide the following properties (see `sample_inputs/elbowKPI.json` for an example)
+-   **image**: "iso", "iso-flipped", "top" (or "+z"), "bottom" (or "+z"), "left" (or "-y"), "right" (or "+y"), "front" (or "+x"), "back" (or "-x") - Line type can specify "plot" type to plot the line. Setting to "None" results in no images (default: "None"). To set a view to a customized view set image to "customize" and provide the following properties (see `sample_inputs/elbowKPI.json` for an example)
     -   **CameraPosition** = "x y z"
     -   **CameraFocalPoint** = "x y z"
     -   **CameraViewUp** = "v1 v2 v3"
@@ -83,7 +83,7 @@ If an image is desired, define parameters below:
     example_outputs/domainImage_001.tif
     ```
 
-    The default image name is `plot_<kpiName>.png` for line plots and `out_<kpiName>.png` for all other image types, where `<kpiName>` is the title of the metrics entery in the kpi.json file.
+    **Note**: The image number should be provided when calling `extract.py` (i.e., the 5th argument, `caseNumber`) for the number replacement in the image name work correctly. The default image name is `plot_<kpiName>.png` for line plots and `out_<kpiName>.png` for all other image types, where `<kpiName>` is the title of the metrics entry in the kpi.json file.
 
 -   **min**: Minimum value for customizing/rescaling the data range (default: "auto")
 -   **max**: Maximum value for customizing/rescaling the data range (default: "auto")
@@ -102,8 +102,8 @@ If an image is desired, define parameters below:
 
 If animation is desired, define parameters below:
 
--   **animation**: "true"
--   **animationName** : This field specifies the animation name format. For detailes see the `imageName` entry above. The default image name is `out_<kpiName>.gif` where `<kpiName>` is the title of the metrics entery in the kpi.json file.
+-   **animation**: "true" (default: "false", which results in no animation)
+-   **animationName** : This field specifies the animation name format. For details see the `imageName` entry above. The default image name is `out_<kpiName>.gif` where `<kpiName>` is the title of the metrics entry in the kpi.json file.
 
 -   **image**, **min**, **max**, **colorscale**, **invertcolor**, **discretecolors**, **opacity**, **bodyopacity** and the parameters for specifying color bar properties are the same as parameters in the image section described above.
 
