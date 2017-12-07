@@ -63,7 +63,7 @@ Syntax for extracting various metric types are described below:
 
 If an image is desired, define parameters below:
 
--   **image**: "iso", "iso-flipped", "top" (or "+z"), "bottom" (or "+z"), "left" (or "-y"), "right" (or "+y"), "front" (or "+x"), "back" (or "-x") - Line type can specify "plot" type to plot the line. Setting to "None" results in no images (default: "None"). To set a view to a customized view set image to "customize" and provide the following properties (see `sample_inputs/elbowKPI.json` for an example)
+-   **image**: "iso", "iso-flipped", "top" (or "+z"), "bottom" (or "-z"), "left" (or "-y"), "right" (or "+y"), "front" (or "+x"), "back" (or "-x") - Line type can specify "plot" type to plot the line. Setting to "None" results in no images (default: "None"). To set a view to a customized view set image to "customize" and provide the following properties (see `sample_inputs/elbowKPI.json` for an example)
     -   **CameraPosition** = "x y z"
     -   **CameraFocalPoint** = "x y z"
     -   **CameraViewUp** = "v1 v2 v3"

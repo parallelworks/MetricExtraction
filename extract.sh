@@ -2,20 +2,26 @@
 
 # USAGE:
 # - CalculiX (exo file):
-#    ./extract.sh /opt/paraview530/bin mexdex/extract.py sample_inputs/solve.exo sample_inputs/beadOnPlateKPI.json example_outputs example_outputs/metrics.csv 
+#    ./extract.sh /opt/paraview530/bin sample_inputs/solve.exo sample_inputs/beadOnPlateKPI.json example_outputs example_outputs/metrics.csv 
 # - openFOAM:
-#    ./extract.sh /opt/paraview530/bin mexdex/extract.py sample_inputs/elbow-test/system/controlDict sample_inputs/elbowKPI_test.json example_outputs/openFOAM/ example_outputs/openFOAM/metrics.csv  0
+#    ./extract.sh /opt/paraview530/bin sample_inputs/elbow-test/system/controlDict sample_inputs/elbowKPI_test.json example_outputs/openFOAM/ example_outputs/openFOAM/metrics.csv  0
 
 paraviewPath=$1
-pvpythonExtractScript=$2
-resultsFile=$3
-desiredMetricsFile=$4
-pvOutputDir=$5
-outputMetrics=$6
-caseNumber=$7
+resultsFile=$2
+desiredMetricsFile=$3
+pvOutputDir=$4
+outputMetrics=$5
+caseNumber=$6
 
-export PATH=$PATH:$paraviewPath
+if [ $# -eq 7 ]
+then
+	isCellData=$7
+else
+	isCellData=""
+fi
 
-xvfb-run -a --server-args="-screen 0 1024x768x24" pvpython  --mesa-llvm   $pvpythonExtractScript  $resultsFile $desiredMetricsFile  $pvOutputDir $outputMetrics $caseNumber
+pvpythonExtractScript=mexdex/extract.py
+
+xvfb-run -a --server-args="-screen 0 1024x768x24" $paraviewPath/pvpython  --mesa-llvm   $pvpythonExtractScript  $resultsFile $desiredMetricsFile  $pvOutputDir $outputMetrics $caseNumber $isCellData
 
 
