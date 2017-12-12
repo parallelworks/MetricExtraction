@@ -64,5 +64,12 @@
         "colorByField": "NT", 		
 		"representationType": "Wireframe",
 		"animation": "true"
-    }
+    },
+	"domainTemp": {
+		"animation": "false",
+		"field": "NT",
+		"image": "iso",
+		"type": "Basic",
+		"extractStatsTimes":"0.1,0.4"
+  }
 }

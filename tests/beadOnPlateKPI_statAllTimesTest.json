@@ -1,0 +1,10 @@
+{
+  "domainNT": {
+    "animation": "false",
+    "field": "NT",
+    "image": "iso",
+    "type": "Basic",
+	"extractStatsTimes":"0.1,0.4",
+	"extractStatsTimeSteps":"first"
+  }
+}

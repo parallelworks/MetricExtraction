@@ -1,0 +1,19 @@
+{
+  "ClipUx": {
+    "animation": "false",
+    "bodyopacity": "0.3",
+    "colorscale": "Blue to Red Rainbow",
+    "discretecolors": "20",
+    "field": "U",
+    "fieldComponent": "X",
+    "image": "top",
+    "invert": "true",
+    "invertcolor": "0",
+    "max": "5",
+    "min": "0",
+    "opacity": "1",
+    "plane": "X",
+    "position": "10.0  center center",
+    "type": "Clip"
+  }
+}

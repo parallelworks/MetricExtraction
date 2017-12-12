@@ -14,6 +14,35 @@ The below parameters need to be specified for each of the desired metrics:
 -   **type**: Specifies the type of metric. The types are "Clip", "Line", "Probe", "Slice", "Volume" and "StreamLines". Additional fields for each metric type are listed below.
 -   **position**: See below type definition for position description
 -   **extractStats**: Set to "false" if quantitative metrics to the csv file (ave,min,max,sd) is not needed (default: "true"). **Note** `extractStats` is set to `false` for `WarpByVector` type.
+-   **extractStatsTimeSteps**: Defines the simulation steps at which the metrics/statistics are extracted. The steps can be set as follows:
+    -   "last": (**default**) The metrics from the last time step of the simulation are extracted
+    -   "all" : The metrics from every simulation time point are extracted
+    -   "first": The metrics from the first time step of the simulation are extracted
+    -   Multiple time points can be specified in two ways:
+        1.  Multiple values delimited by ",".
+        2.  Entering a range of integers by following the *<https://docs.python.org/2/library/functions.html?highlight=slice#slice>* For example
+
+            ``` example
+            "1:3"        # extracts at steps starting from 1 through 3
+            "4:"         # extracts at steps start from 4 to the end
+            ":5"         # extracts at steps start from the beginning through 4
+            ":"          # extracts at all steps
+            "1:20:5"     # extracts at steps starting from 1 through not past 20, by step 5
+            "-2:"        # extracts the last two steps
+            ```
+-   **extractStatsTimes**: Defines the simulation times at which the metrics/statistics are extracted. Please, note that if **extractStatsTimeSteps** is difined **extractStatsTimes** will be ignored. The times can be set as follows:
+    -   "last" or "latest": (**default**) The metrics from the last time step of the simulation are extracted
+    -   "all" : The metrics from every simulation time point are extracted
+    -   "first": The metrics from the first time step of the simulation are extracted
+    -   Multiple time points can be specified in two ways:
+        1.  Multiple values delimited by ",". For example, see the metric `domainTemp` in *sample\_inputs/beadOnPlateKPI.json*.
+        2.  Entering a range of time points by specifying the minimum, maximum and step size of the range. For example entering
+
+            ``` example
+            1:5:2
+            ```
+
+            will set the parameter values to `1`, `3` and `5`.
 
 Syntax for extracting various metric types are described below:
 
