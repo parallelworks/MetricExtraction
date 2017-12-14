@@ -20,8 +20,6 @@ else
 	isCellData=""
 fi
 
-pvpythonExtractScript=mexdex/extract.py
-
-xvfb-run -a --server-args="-screen 0 1024x768x24" $paraviewPath/pvpython  --mesa-llvm   $pvpythonExtractScript  $resultsFile $desiredMetricsFile  $pvOutputDir $outputMetrics $caseNumber $isCellData
+xvfb-run -a --server-args="-screen 0 1024x768x24" $paraviewPath/pvpython  --mesa-llvm   mexdex/extract.py  $resultsFile $desiredMetricsFile  $pvOutputDir $outputMetrics $caseNumber $isCellData
 
 
