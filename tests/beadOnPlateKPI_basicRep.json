@@ -1,0 +1,11 @@
+{
+	"domainTemp": {
+		"animation": "false",
+		"field": "NT",
+		"image": "iso",
+		"type": "Basic",
+		"extractStatsTimes":"last",
+		"bodyopacity": "1",
+		"representationType":"Wireframe"
+  }
+}

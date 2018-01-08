@@ -3,6 +3,9 @@
 # USAGE:
 # - CalculiX (exo file):
 #    ./extract.sh /opt/paraview530/bin sample_inputs/solve.exo sample_inputs/beadOnPlateKPI.json example_outputs example_outputs/metrics.csv 
+# - CalculiX (exo file - vgroove with selected elements ): 
+#    ./extract.sh /opt/paraview530/bin sample_inputs/vgroove-test/vgrv_s2.exo sample_inputs/vgroove-test/vgroove_test.json  example_outputs/vgroove/ example_outputs/vgroove/metrics.csv
+#
 # - openFOAM:
 #    ./extract.sh /opt/paraview530/bin sample_inputs/elbow-test/system/controlDict sample_inputs/elbowKPI_test.json example_outputs/openFOAM/ example_outputs/openFOAM/metrics.csv  0
 

@@ -25,7 +25,7 @@ The below parameters need to be specified for each of the desired metrics:
    specify the desired component as fieldComponent. If =fieldComponent=
    is not given for vector/tensor quantities, the magnitude of the desired
    quantity will be extracted, i.e., the default is   "fieldComponent": "Magnitude"
-- *type*: Specifies the type of metric. The types are "Clip", "Line", "Probe", "Slice", "Volume" and "StreamLines".
+- *type*: Specifies the type of metric. The types are "Basic", "Clip", "Line", "Probe", "Slice", "Volume", "StreamLines", and "FindData".
   Additional fields for each metric type are listed below.
 - *position*: See below type definition for position description
 - *extractStats*: Set to "false" if quantitative metrics to the csv file (ave,min,max,sd) is not needed (default: "true"). *Note* =extractStats= is set to =false= for =WarpByVector= type.
@@ -128,6 +128,10 @@ Syntax for extracting various metric types are described below:
 	If =colorByFieldComponent= is not given for vector/tensor quantities, the magnitude of the desired
 	quantity will be extracted, i.e., the default is "colorByFieldComponent": "Magnitude".
   - *Note* "extractStats" is set to "false" for this type.
+- *FindData*: for query-based selections. *Note* that the current implementation only allows selecting through a given list of discrete values (e.g., selecting elements specified by element numbers). For an example see the files in =sample_inputs/vgroove-test/= and =example_outputs/vgroove/=.
+  - queryField: The name of the field to be used in the query,
+  - queryFieldType : The type of the query field,
+  - queryList: A list of comma delimited values to match the query field.
 
 If an image is desired, define parameters below:
 - *image*: "iso", "iso-flipped", "top" (or "+z"), "bottom" (or "-z"), "left" (or "-y"), "right" (or "+y"), "front" (or "+x"), "back" (or "-x") - Line type can

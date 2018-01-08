@@ -11,7 +11,7 @@ The below parameters need to be specified for each of the desired metrics:
 -   **name**: Unique metric name
 -   **field**: Domain field to extract metrics from (must be available in the model). **For `Basic` metric type, specifying `field` is optional (see below)**
 -   **fieldComponent**: For vector/tensor quantities specify the desired component as fieldComponent. If `fieldComponent` is not given for vector/tensor quantities, the magnitude of the desired quantity will be extracted, i.e., the default is "fieldComponent": "Magnitude"
--   **type**: Specifies the type of metric. The types are "Clip", "Line", "Probe", "Slice", "Volume" and "StreamLines". Additional fields for each metric type are listed below.
+-   **type**: Specifies the type of metric. The types are "Basic", "Clip", "Line", "Probe", "Slice", "Volume", "StreamLines", and "FindData". Additional fields for each metric type are listed below.
 -   **position**: See below type definition for position description
 -   **extractStats**: Set to "false" if quantitative metrics to the csv file (ave,min,max,sd) is not needed (default: "true"). **Note** `extractStats` is set to `false` for `WarpByVector` type.
 -   **extractStatsTimeSteps**: Defines the simulation steps at which the metrics/statistics are extracted. The steps can be set as follows:
@@ -30,7 +30,7 @@ The below parameters need to be specified for each of the desired metrics:
             "1:20:5"     # extracts at steps starting from 1 through not past 20, by step 5
             "-2:"        # extracts the last two steps
             ```
--   **extractStatsTimes**: Defines the simulation times at which the metrics/statistics are extracted. Please, note that if **extractStatsTimeSteps** is difined **extractStatsTimes** will be ignored. The times can be set as follows:
+-   **extractStatsTimes**: Defines the simulation times at which the metrics/statistics are extracted. Please, note that if **extractStatsTimeSteps** is defined **extractStatsTimes** will be ignored. The times can be set as follows:
     -   "last" or "latest": (**default**) The metrics from the last time step of the simulation are extracted
     -   "all" : The metrics from every simulation time point are extracted
     -   "first": The metrics from the first time step of the simulation are extracted
@@ -89,6 +89,10 @@ Syntax for extracting various metric types are described below:
     -   colorByField: domain field to use for coloring the warped shape. Default is set to "field"
     -   colorByFieldComponent: The component of the vector/tensor fields for coloring the warped shape. If `colorByFieldComponent` is not given for vector/tensor quantities, the magnitude of the desired quantity will be extracted, i.e., the default is "colorByFieldComponent": "Magnitude".
     -   **Note** "extractStats" is set to "false" for this type.
+-   **FindData**: for query-based selections. **Note** that the current implementation only allows selecting through a given list of discrete values (e.g., selecting elements specified by element numbers). For an example see the files in `sample_inputs/vgroove-test/` and `example_outputs/vgroove/`.
+    -   queryField: The name of the field to be used in the query,
+    -   queryFieldType : The type of the query field,
+    -   queryList: A list of comma delimited values to match the query field.
 
 If an image is desired, define parameters below:
 
