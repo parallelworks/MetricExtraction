@@ -173,6 +173,10 @@ If an image is desired, define parameters below:
   + *FontColor* RGB color values. For example for white color specify set to "1 1 1"
   + *FontSize*
   + *LabelFormat* format for displaying the color bar numbers, e.g. "%4.3g"
+  + *NumberOfLabels* : The maximum number of tick marks of the color bar (excluding the maximum and minimum labels).
+  + *DrawTickMarks*: Setting "0" (or "false") removes the tick marks (default: "1")
+  + *DrawSubTickMarks*: Setting "0" (or "false") removes the sub tick marks (default: "1")	
+  + *ColorBarAnnotations*: Add a List of comma separated values and tags for adding annotations to the color bar. For example, setting to "0.55, A , 0.75, B" adds the labels "A" and "B" at locations of 0.55 and 0.75, respectively (provided that they are within the limits of the color bar).
 - *representationType*: Set the representation type to "Surface With Edges", "3D Glyphs", "Outline", "Point Gaussian", "Points", "Surface" or "Wireframe" (default: "Surface")
 
 If animation is desired, define parameters below:
