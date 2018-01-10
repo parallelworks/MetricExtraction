@@ -3,9 +3,6 @@ Metric Extraction
 
 The below describes a json file syntax created to extract field information from simulation domains. It uses the ParaView Python API to extract these metrics in the form of Probes, Lines, Slices, Clips and Volumes.
 
--   To convert older csv files to json file use convertcsv2json.py. **Note** that the converted json file might need some editing (e.g., type, field and fieldComponent fields).
--   [Hjson](http://hjson.org/) can be used to convert json files to Hjson files (for easier readability) and vice versa
-
 The below parameters need to be specified for each of the desired metrics:
 
 -   **name**: Unique metric name
@@ -54,13 +51,13 @@ Syntax for extracting various metric types are described below:
 -   **Line**:
     -   position="x1 y1 z1 x2 y2 z2" specifies the coordinates of the start point (x1, y1, z1) and end point (x2, y2, z2) of the line segment. If "center" is specified in any position, auto calculates focal point of model.
     -   resolution specifies the number of points/resolution.
-    -   **Note** : To plot the line using the "plot" option (see notes below under image or animation) relies on `matplotlib.pyplot` which depends on `python-dateutil`. Loading `matplotlib.pyplot` in `pvpython` raises an error due to this unresolved dependency. To solve this problem install the `python-dateutil` module in the Python `site-packages` directory of Python2.7 that comes with Python.
+    -   **Note** : To plot the line using the "plot" option (see notes below under image or animation) relies on `matplotlib.pyplot` which depends on `python-dateutil`. Loading `matplotlib.pyplot` in `pvpython` raises an error due to this unresolved dependency. To solve this problem install the `python-dateutil` module in the Python `site-packages` directory of Python2.7 that comes with Paraview.
 
         ``` example
         pip2 install --target=/ParaviewDirectory/ParaView-5.3.0-Qt5-OpenGL2-MPI-Linux-64bit/lib/python2.7/site-packages python-dateutil
         ```
 
-        This step is not needed if instead of `pvpython` you are running the `extract.py` script using `python2` and setting `PYTHONPATH` to point to where `paraview.simple` modules are.
+        `/ParaviewDirectory` is the **absolute** path to ParaView parent directory. This step is not needed if instead of `pvpython` you are running the `extract.py` script using `python2` and setting `PYTHONPATH` to point to where `paraview.simple` modules are.
 
 -   **Clip**: clip through domain with a plane
     -   plane="x","y" or "z" specifies the direction of the clip plane (normal to the "x","y" or "z" axis)
@@ -131,7 +128,8 @@ If an image is desired, define parameters below:
     -   **FontColor** RGB color values. For example for white color specify set to "1 1 1"
     -   **FontSize**
     -   **LabelFormat** format for displaying the color bar numbers, e.g. "%4.3g"
-    -   **NumberOfLabels** : The maximum number of tick marks of the color bar (excluding the maximum and minimum labels).
+    -   **NumberOfLabels** : The maximum number of tick marks of the color bar (excluding the maximum and minimum labels). Note that this feature is has been removed from ParaView 5.4, and the labels are calculated in the module and added through the new **customLabel** feature (see below).
+    -   **customLabel** : A list of comma separated numbers for setting the colorbar labels. See `tests/elbowKPI_colorBarTest.json` for an example. **Only available in ParaView 5.4 and above**.
     -   **DrawTickMarks**: Setting "0" (or "false") removes the tick marks (default: "1")
     -   **DrawSubTickMarks**: Setting "0" (or "false") removes the sub tick marks (default: "1")
     -   **ColorBarAnnotations**: Add a List of comma separated values and tags for adding annotations to the color bar. For example, setting to "0.55, A , 0.75, B" adds the labels "A" and "B" at locations of 0.55 and 0.75, respectively (provided that they are within the limits of the color bar).
