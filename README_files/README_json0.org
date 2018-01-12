@@ -416,3 +416,5 @@ If blender (.x3d) output is desired, add the parameter *blender* and set it to "
 
 	 #+CAPTION: Plot example
 	 [[file:example_outputs/plot_example_json.png]]
+** License
+   This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.

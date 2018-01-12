@@ -364,3 +364,8 @@ If blender (.x3d) output is desired, add the parameter **blender** and set it to
     ![Metric example](example_outputs/metric_example_json.png)
 
     ![Plot example](example_outputs/plot_example_json.png)
+
+License
+-------
+
+This project is licensed under the MIT License - see the \[LICENSE.md\](LICENSE.md) file for details.
