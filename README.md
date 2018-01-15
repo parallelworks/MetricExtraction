@@ -40,6 +40,7 @@ The below parameters need to be specified for each of the desired metrics:
             ```
 
             will set the parameter values to `1`, `3` and `5`.
+-   **temporalStats**: If set to "true", applies a tempoeral statistics filter on the field. The tempoeral statistics filter loads all the time steps of a data set and computes maximum, minimum, average and standard deviation of each point and cell variable over time. **Note** that the `extractedStats` filter would be applied on the replaced over-time values. The default value of `temporalStats` is set to false. With this option, **colorByField** is required which can be set to "minimum", "maximum", "stddev" and "average". For an example, see the metric `bead_NT_overtime_max` in *sample\_inputs/vgroove-test/vgroove\_test.json*. Also, see *example\_outputs/vgroove/out\_bead\_NT\_overtime\_max.png.long*.
 
 Syntax for extracting various metric types are described below:
 

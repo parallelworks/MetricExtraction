@@ -1,0 +1,19 @@
+{
+	"wholeDomain_NT": {
+		"field": "NT",
+		"colorByField":"maximum",
+		"image": "iso",
+		"type": "Basic",
+		"representationType": "Surface With Edges",
+		"temporalStats":"true"
+	},
+	"wholeDomain_HFL": {
+		"field": "HFL",
+		"colorByField":"minimum",
+		"image": "iso",
+		"type": "Basic",
+		"representationType": "Surface With Edges",
+		"temporalStats":"true"
+	}
+
+}
