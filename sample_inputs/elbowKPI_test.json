@@ -7,6 +7,8 @@
     "field": "U",
     "fieldComponent": "Magnitude",
     "image": "top",
+	"imageTimeSteps": "-3:",
+	"imageName":"out_ClipUMag{:03d}.{:03d}.png",
     "invert": "true",
     "invertcolor": "0",
     "max": "5",
