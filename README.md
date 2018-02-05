@@ -139,6 +139,7 @@ If an image is desired, define parameters below:
     -   **DrawSubTickMarks**: Setting "0" (or "false") removes the sub tick marks (default: "1")
     -   **ColorBarAnnotations**: Add a List of comma separated values and tags for adding annotations to the color bar. For example, setting to "0.55, A , 0.75, B" adds the labels "A" and "B" at locations of 0.55 and 0.75, respectively (provided that they are within the limits of the color bar).
 -   **representationType**: Set the representation type to "Surface With Edges", "3D Glyphs", "Outline", "Point Gaussian", "Points", "Surface" or "Wireframe" (default: "Surface")
+-   **imageTimeSteps** and **imageTimes** are optional parameters for settings the time step(s) or time(s) of the extracted image(s). The default image extraction time is the last time step (latest time) available in the data source. Please, refer to **extractStatsTimeSteps** and **extractStatsTimes** above for the details on how to specify the image time steps/times. **Note** that if more than one image is desired, **imageName** should be provided to name the output images, e.g., set **imageName** to `out_Temperature_{:03d}.png` to include the output image number in the name (see **imageName** above for more details). If the parameter `caseNumber` is set when calling `extract.sh`, **imageName** can be set with multiple format specifier, e.g., `out_Temperature_{:03d}_{:03d}.png`.
 
 If animation is desired, define parameters below:
 
