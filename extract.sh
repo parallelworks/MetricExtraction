@@ -1,5 +1,11 @@
 #!/bin/bash
-
+#
+# This script provides examples for running extract.py via pvpython. To get help on the arguments for
+# running extract.py, run: 
+#
+#   ParaviewPath/bin/pvpython  mexdex/extract.py -h
+#
+#
 # USAGE:
 # - CalculiX (exo file):
 #    ./extract.sh /opt/paraview530/bin sample_inputs/solve.exo sample_inputs/beadOnPlateKPI.json example_outputs example_outputs/metrics.csv 
@@ -14,15 +20,22 @@ resultsFile=$2
 desiredMetricsFile=$3
 pvOutputDir=$4
 outputMetrics=$5
-caseNumber=$6
 
-if [ $# -eq 7 ]
+if [ $# -ge 6 ]
 then
-	isCellData=$7
+	caseNumber="--case_number $6"
 else
-	isCellData=""
+	caseNumber=""
 fi
 
-xvfb-run -a --server-args="-screen 0 1024x768x24" $paraviewPath/pvpython  --mesa-llvm   mexdex/extract.py  $resultsFile $desiredMetricsFile  $pvOutputDir $outputMetrics $caseNumber $isCellData
+conver2cellData=""
+if [ $# -eq 7 ]
+then
+	if [ "$7" = true ] ; then
+		convert2cellData="--convert_to_cell_data"
+	fi
+fi
+
+xvfb-run -a --server-args="-screen 0 1024x768x24" $paraviewPath/pvpython  --mesa-llvm   mexdex/extract.py  $resultsFile $desiredMetricsFile  $pvOutputDir $outputMetrics  $caseNumber $convert2cellData
 
 
