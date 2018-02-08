@@ -118,7 +118,7 @@ If an image is desired, define parameters below:
     example_outputs/domainImage_001.tif
     ```
 
-    **Note**: The image number should be provided when calling `extract.py` (i.e., the 5th argument, `caseNumber`) for the number replacement in the image name work correctly. The default image name is `plot_<kpiName>.png` for line plots and `out_<kpiName>.png` for all other image types, where `<kpiName>` is the title of the metrics entry in the kpi.json file.
+    **Note**: The image number should be provided when calling `extract.py` (i.e., the 5th argument, `caseNumber`) for the number replacement in the image name work correctly. Also, if multiple images at different times/time steps will be generated, it is necessary to include the image number via a format specifier in `imageName` (see **imageTimes** and **imageTimeSteps** below). The default image name is `plot_<kpiName>.png` for line plots and `out_<kpiName>.png` for all other image types, where `<kpiName>` is the title of the metrics entry in the kpi.json file.
 
 -   **min**: Minimum value for customizing/rescaling the data range (default: "auto")
 -   **max**: Maximum value for customizing/rescaling the data range (default: "auto")
