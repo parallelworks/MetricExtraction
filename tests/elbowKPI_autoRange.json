@@ -1,0 +1,42 @@
+{
+  "ClipUMag": {
+    "animation": "false",
+    "bodyopacity": "0.3",
+    "colorscale": "Blue to Red Rainbow",
+    "discretecolors": "20",
+    "field": "U",
+    "fieldComponent": "Magnitude",
+    "image": "top",
+	"imageTimeSteps": "-3:",
+	"extractStatsTimeSteps" : "-3:",
+	"imageName":"out_ClipUMag{:03d}.{:03d}.png",
+    "invert": "true",
+    "invertcolor": "0",
+    "opacity": "1",
+    "plane": "X",
+    "position": "60.0  center center",
+    "type": "Clip"
+  },
+  "streamlinesU": {
+    "animation": "false",
+    "blender": "true",
+    "bodyopacity": "0.3",
+    "colorByField": "Vorticity",
+    "colorByFieldComponent": "Magnitude",
+    "colorscale": "Blue to Red Rainbow",
+    "discretecolors": "20",
+    "field": "U",
+    "image": "iso",
+	"imageTimeSteps": "-3:",
+	"extractStatsTimeSteps" : "-3:",
+	"imageName":"out_streamlinesU.{:03d}.{:03d}.png",
+    "integralDirection": "BOTH",
+    "invertcolor": "0",
+    "maxStreamLength": "200",
+    "opacity": "1",
+    "position": "49 62 0 63 62 0",
+    "resolution": "10",
+    "tubeRadius": "0.2",
+    "type": "StreamLines"
+  }
+}

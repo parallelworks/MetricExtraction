@@ -1,4 +1,5 @@
 /.project
+/.idea/*
 /*.pyc
 /*~
 /plot_lineNT.csv

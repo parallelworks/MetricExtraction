@@ -1,0 +1,16 @@
+{    "wrapByVectorU": {
+        "opacity": "0.7", 
+        "invertcolor": "0", 
+         "image": "iso", 
+	"imageTimeSteps": "-3:",
+	"extractStatsTimeSteps" : "-3:",
+	"imageName":"out_wrap.{:03d}.png",
+        "colorscale": "Blue to Red Rainbow", 
+        "field": "U", 
+        "bodyopacity": "0.3", 
+        "type": "WarpByVector",
+		"scaleFactor": "100",
+        "colorByField": "NT", 		
+		"representationType": "Wireframe"
+    }
+}
